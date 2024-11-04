@@ -1,4 +1,6 @@
 from Interfaz.Ihabitaciones import HotelApp
+from IHabitaciones import IHabitaciones
+from IClientes import IClientes
 
 #Clase GestorInterfaces
 def usar_IHabitaciones():

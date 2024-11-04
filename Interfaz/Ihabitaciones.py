@@ -47,7 +47,7 @@ class HotelApp:
             tipo = int(tipo)
             estado = int(estado)
             habit = Habitacion(numero, tipo, estado, precio)
-            self.db.insertar_habitacion(habit)
+            self.db.insertar_habitacion(habit.numero, habit.estado, habit.tipo, habit.precio_por_noche)
             messagebox.showinfo("Registro Exitoso", f"Habitación {numero} registrada con éxito.")
             ventana.destroy()
         except ValueError:

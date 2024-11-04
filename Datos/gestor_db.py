@@ -24,7 +24,7 @@ class GestorDB:
             print("Conexión a la base de datos establecida..")
         except sqlite3.Error as e:
             print(f"Error al conectar con la base de datos: {e}")
-    
+
     def desconectar(self):
         """Cierra la conexión con la base de datos."""
         if self.conn:
@@ -43,7 +43,7 @@ class GestorDB:
         except sqlite3.Error as e:
             print(f"Error al ejecutar la consulta: {e}")
             return None
-    
+
     def crear_tablas(self):
         self.conectar()
         self._crear_tabla_habitaciones()
@@ -97,8 +97,22 @@ class GestorDB:
             INSERT INTO Habitacion (numero, tipo, estado, precio_por_noche)
             VALUES (?, ?, ?, ?)
         '''
-        self.ejecutar_consulta(consulta, (numero, tipo, estado, precio_por_noche))
-        print("Habitación insertada correctamente.")
+        resultado = self.ejecutar_consulta(consulta, (numero, tipo, estado, precio_por_noche))
+        if resultado:
+            print("Habitación insertada correctamente.")
+
+    def obtener_habitaciones(self):
+        #mostrar habitaciones
+        consulta = 'SELECT * FROM Habitacion'
+        cursor = self.ejecutar_consulta(consulta)
+
+        if cursor:
+            habitaciones = cursor.fetchall()
+            print("Habitaciones obtenidas correctamente.")
+            return habitaciones
+        else:
+            print("No se pudieron obtener las habitaciones.")
+            return []
 
     def insertar_cliente(self, id_cliente, nombre, apellido, direccion, telefono, email):
         """Inserta un nuevo cliente en la base de datos."""
@@ -106,17 +120,32 @@ class GestorDB:
             INSERT INTO Cliente (id_cliente, nombre, apellido, direccion, telefono, email)
             VALUES (?, ?, ?, ?, ?, ?)
         '''
-        self.ejecutar_consulta(consulta, (id_cliente, nombre, apellido, direccion, telefono, email))
-        print("Cliente insertado correctamente.")
+        resultado = self.ejecutar_consulta(consulta, (id_cliente, nombre, apellido, direccion, telefono, email))
+        if resultado:
+            print("Cliente insertado correctamente.")
+    
+    def obtener_clientes(self):
+        #mostrar clientes
+        consulta = 'SELECT * FROM Cliente'
+        cursor = self.ejecutar_consulta(consulta)
 
+        if cursor:
+            clientes = cursor.fetchall()
+            print("Clientes obtenidas correctamente.")
+            return clientes
+        else:
+            print("No se pudieron obtener los clientes.")
+            return []
+            
     def insertar_reserva(self, id_reserva, id_cliente, numero_habitacion, fecha_entrada, fecha_salida, cantidad_personas):
         """Inserta una nueva reserva en la base de datos."""
         consulta = '''
             INSERT INTO Reserva (id_reserva, id_cliente, numero_habitacion, fecha_entrada, fecha_salida, cantidad_personas)
             VALUES (?, ?, ?, ?, ?, ?)
         '''
-        self.ejecutar_consulta(consulta, (id_reserva, id_cliente, numero_habitacion, fecha_entrada, fecha_salida, cantidad_personas))
-        print("Reserva insertada correctamente.")
+        resultado = self.ejecutar_consulta(consulta, (id_reserva, id_cliente, numero_habitacion, fecha_entrada, fecha_salida, cantidad_personas))
+        if resultado:
+            print("Reserva insertada correctamente.")
 
     def insertar_factura(self, id_factura, id_cliente, id_reserva, fecha_emision, total):
         """Inserta una nueva factura en la base de datos."""
@@ -124,8 +153,9 @@ class GestorDB:
             INSERT INTO Factura (id_factura, id_cliente, id_reserva, fecha_emision, total)
             VALUES (?, ?, ?, ?, ?)
         '''
-        self.ejecutar_consulta(consulta, (id_factura, id_cliente, id_reserva, fecha_emision, total))
-        print("Factura insertada correctamente.")
+        resultado = self.ejecutar_consulta(consulta, (id_factura, id_cliente, id_reserva, fecha_emision, total))
+        if resultado:
+            print("Factura insertada correctamente.")
 
     def insertar_empleado(self, id_empleado, nombre, apellido, cargo, sueldo):
         """Inserta un nuevo empleado en la base de datos."""
