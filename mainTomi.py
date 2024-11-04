@@ -3,8 +3,8 @@ from Reportes.gestorReportes import GestorReportes
 
 
 def main():
-    gestor = GestorDB()
-    gestor_reportes= GestorReportes()
+    gestor_BaseDatos = GestorDB()
+    gestor_reportes= GestorReportes(gestor_BaseDatos)
     
     while True:
         print("\n********** Menú del Sistema de Gestión de Hotel **********")
@@ -24,9 +24,9 @@ def main():
             tipo = input("Tipo de habitación (simple, doble, suite): ")
             estado = input("Estado de la habitación (disponible/ocupada): ")
             precio_por_noche = float(input("Precio por noche: "))
-            gestor.conectar()
-            gestor.insertar_habitacion(numero, tipo, estado, precio_por_noche)
-            gestor.desconectar()
+            gestor_BaseDatos.conectar()
+            gestor_BaseDatos.insertar_habitacion(numero, tipo, estado, precio_por_noche)
+            gestor_BaseDatos.desconectar()
 
         elif opcion == "2":
             # Ejemplo de registro de un cliente
@@ -36,9 +36,9 @@ def main():
             direccion = input("Dirección del cliente: ")
             telefono = input("Teléfono del cliente: ")
             email = input("Email del cliente: ")
-            gestor.conectar()
-            gestor.insertar_cliente(id_cliente, nombre, apellido, direccion, telefono, email)
-            gestor.desconectar()
+            gestor_BaseDatos.conectar()
+            gestor_BaseDatos.insertar_cliente(id_cliente, nombre, apellido, direccion, telefono, email)
+            gestor_BaseDatos.desconectar()
 
         elif opcion == "3":
             # Ejemplo de realizar una reserva
@@ -48,9 +48,9 @@ def main():
             fecha_entrada = input("Fecha de entrada (YYYY-MM-DD): ")
             fecha_salida = input("Fecha de salida (YYYY-MM-DD): ")
             cantidad_personas = int(input("Cantidad de personas: "))
-            gestor.conectar()
-            gestor.insertar_reserva(id_reserva, id_cliente, numero_habitacion, fecha_entrada, fecha_salida, cantidad_personas)
-            gestor.desconectar()
+            gestor_BaseDatos.conectar()
+            gestor_BaseDatos.insertar_reserva(id_reserva, id_cliente, numero_habitacion, fecha_entrada, fecha_salida, cantidad_personas)
+            gestor_BaseDatos.desconectar()
 
         elif opcion == "4":
             # Ejemplo de generación de una factura
@@ -59,9 +59,9 @@ def main():
             id_reserva = int(input("ID de la reserva: "))
             fecha_emision = input("Fecha de emisión (YYYY-MM-DD): ")
             total = float(input("Total a pagar: "))
-            gestor.conectar()
-            gestor.insertar_factura(id_factura, id_cliente, id_reserva, fecha_emision, total)
-            gestor.desconectar()
+            gestor_BaseDatos.conectar()
+            gestor_BaseDatos.insertar_factura(id_factura, id_cliente, id_reserva, fecha_emision, total)
+            gestor_BaseDatos.desconectar()
 
         elif opcion == "5":
             # Ejemplo de registro de un empleado
@@ -70,9 +70,9 @@ def main():
             apellido = input("Apellido del empleado: ")
             cargo = input("Cargo del empleado (recepcionista, limpieza, etc.): ")
             sueldo = float(input("Sueldo del empleado: "))
-            gestor.conectar()
-            gestor.insertar_empleado(id_empleado, nombre, apellido, cargo, sueldo)
-            gestor.desconectar()
+            gestor_BaseDatos.conectar()
+            gestor_BaseDatos.insertar_empleado(id_empleado, nombre, apellido, cargo, sueldo)
+            gestor_BaseDatos.desconectar()
 
         elif opcion == "6":
             print("\n********** Menú de Reportes **********")
@@ -87,7 +87,7 @@ def main():
 
             if opcion_reporte == "1":
                 # Aquí se solicitarán las fechas y se llamará al método correspondiente
-                numero_habitacion= input("Ingrese el número de su habitación: ")
+                #numero_habitacion= input("Ingrese el número de su habitación: ")
                 fecha_inicio = input("Fecha de inicio (YYYY-MM-DD): ")
                 fecha_fin = input("Fecha de fin (YYYY-MM-DD): ")
                 reportes = gestor_reportes.generar_reporte_reservas (fecha_inicio, fecha_fin)

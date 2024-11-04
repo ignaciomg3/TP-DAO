@@ -3,6 +3,9 @@ from Datos.gestor_db import GestorDB
 def main():
     gestorBaseDatos = GestorDB()
     gestorBaseDatos.borrar_base_de_datos()
+    ## gestorBaseDatos.crear_tablas()
+    ##rellenar tablas
+    
     print("Base de datos borrada.")
     
     while True:

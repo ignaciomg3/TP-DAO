@@ -44,10 +44,12 @@ class GestorDB:
             print(f"Error al ejecutar la consulta: {e}")
             return None
 
+#***************************** CREAR TABLAS ***********************
     def crear_tablas(self):
         self.conectar()
         self._crear_tabla_habitaciones()
         self._crear_tabla_clientes()
+        
         # Llamar a otras funciones de creación de tablas aquí...
         
         self._insertar_datos_iniciales()
@@ -72,6 +74,42 @@ class GestorDB:
                                 email TEXT)''')
         print("Tabla clientes creada correctamente.")
         
+    def _crear_tabla_empleados(self):
+        """Crea la tabla empleados si no existe."""
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS empleados (
+                               id INTEGER PRIMARY KEY,
+                               nombre TEXT NOT NULL,
+                               apellido TEXT NOT NULL,
+                               cargo TEXT NOT NULL,
+                               sueldo REAL NOT NULL
+                            )''')
+        self.conn.commit()
+
+    def _crear_tabla_reservas(self):
+        """Crea la tabla reservas si no existe."""
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS reservas (
+                               id INTEGER PRIMARY KEY,
+                               id_cliente INTEGER NOT NULL,
+                               numero_habitacion INTEGER NOT NULL,
+                               fecha_entrada TEXT NOT NULL,
+                               fecha_salida TEXT NOT NULL,
+                               cantidad_personas INTEGER NOT NULL
+                            )''')
+        self.conn.commit()
+    
+    def _crear_tabla_facturas(self):
+        """Crea la tabla facturas si no existe."""
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS facturas (
+                               id INTEGER PRIMARY KEY,
+                               id_cliente INTEGER NOT NULL,
+                               id_reserva INTEGER NOT NULL,
+                               fecha_emision TEXT NOT NULL,
+                               total REAL NOT NULL
+                            )''')
+        self.conn.commit()
+
+#***************************** INSERTAR ***********************
+    
     def _insertar_datos_iniciales(self):
         # Verificar si la tabla tiene datos
         self.cursor.execute('SELECT COUNT(*) FROM habitaciones')
@@ -83,12 +121,36 @@ class GestorDB:
                                            (102, 'doble', 'ocupada', 75.0),
                                            (201, 'suite', 'disponible', 150.0)
                                        ])
+            self.conn.commit()
             # Insertar datos de prueba en la tabla clientes
             self.cursor.executemany('''INSERT INTO clientes (id, nombre, apellido, direccion, telefono, email)
                                        VALUES (?, ?, ?, ?, ?, ?)''', [
                                            (1, 'Juan', 'Pérez', 'Calle 123', '123456789', 'juan.perez@mail.com'),
                                            (2, 'Ana', 'Gómez', 'Avenida 456', '987654321', 'ana.gomez@mail.com')
                                        ])
+            self.conn.commit()
+
+            self.cursor.executemany('''INSERT INTO empleados (id, nombre, apellido, cargo, sueldo)
+                           VALUES (?, ?, ?, ?, ?)''', [
+                               (1, 'Pedro', 'Lopez', 'Recepcionista', 2500.00),
+                               (2, 'Laura', 'Martinez', 'Servicio de limpieza', 1800.00),
+                               (3, 'Carlos', 'Gomez', 'Conserje', 2200.00)
+                           ])
+            self.conn.commit()
+
+            self.cursor.executemany('''INSERT INTO reservas (id, cliente_id, habitacion_id, fecha_entrada, fecha_salida, cantidad_personas)
+                           VALUES (?, ?, ?, ?, ?, ?)''', [
+                               (1, 1, 101, '2024-03-01', '2024-03-05', 2),
+                               (2, 2, 102, '2024-03-10', '2024-03-15', 1)
+                           ])
+            self.conn.commit()
+
+            
+            self.cursor.executemany('''INSERT INTO facturas (id, cliente_id, reserva_id, fecha_emision, total)
+                           VALUES (?, ?, ?, ?, ?)''', [
+                               (1, 1, 1, '2024-03-05', 500.00),
+                               (2, 2, 2, '2024-03-15', 300.00)
+                           ])
             self.conn.commit()
 
     def insertar_habitacion(self, numero, tipo, estado, precio_por_noche):
@@ -100,20 +162,7 @@ class GestorDB:
         resultado = self.ejecutar_consulta(consulta, (numero, tipo, estado, precio_por_noche))
         if resultado:
             print("Habitación insertada correctamente.")
-
-    def obtener_habitaciones(self):
-        #mostrar habitaciones
-        consulta = 'SELECT * FROM Habitacion'
-        cursor = self.ejecutar_consulta(consulta)
-
-        if cursor:
-            habitaciones = cursor.fetchall()
-            print("Habitaciones obtenidas correctamente.")
-            return habitaciones
-        else:
-            print("No se pudieron obtener las habitaciones.")
-            return []
-
+    
     def insertar_cliente(self, id_cliente, nombre, apellido, direccion, telefono, email):
         """Inserta un nuevo cliente en la base de datos."""
         consulta = '''
@@ -124,19 +173,6 @@ class GestorDB:
         if resultado:
             print("Cliente insertado correctamente.")
     
-    def obtener_clientes(self):
-        #mostrar clientes
-        consulta = 'SELECT * FROM Cliente'
-        cursor = self.ejecutar_consulta(consulta)
-
-        if cursor:
-            clientes = cursor.fetchall()
-            print("Clientes obtenidas correctamente.")
-            return clientes
-        else:
-            print("No se pudieron obtener los clientes.")
-            return []
-            
     def insertar_reserva(self, id_reserva, id_cliente, numero_habitacion, fecha_entrada, fecha_salida, cantidad_personas):
         """Inserta una nueva reserva en la base de datos."""
         consulta = '''
@@ -166,6 +202,7 @@ class GestorDB:
         self.ejecutar_consulta(consulta, (id_empleado, nombre, apellido, cargo, sueldo))
         print("Empleado insertado correctamente.")
     
+    #***************************** CONSULTAS ***********************
     def obtener_habitaciones(self):
         """Obtiene todas las habitaciones de la base de datos."""
         consulta = 'SELECT * FROM habitaciones'
@@ -175,7 +212,20 @@ class GestorDB:
             return habitaciones
         else:
             return []
-    
+   
+    def obtener_habitaciones(self):
+        #mostrar habitaciones
+        consulta = 'SELECT * FROM Habitacion'
+        cursor = self.ejecutar_consulta(consulta)
+
+        if cursor:
+            habitaciones = cursor.fetchall()
+            print("Habitaciones obtenidas correctamente.")
+            return habitaciones
+        else:
+            print("No se pudieron obtener las habitaciones.")
+            return []
+
     def obtener_clientes(self):
         """Obtiene todos los clientes de la base de datos."""
         consulta = 'SELECT * FROM clientes'
@@ -186,6 +236,19 @@ class GestorDB:
         else:
             return []
         
+    def obtener_clientes2(self):
+        #mostrar clientes
+        consulta = 'SELECT * FROM Cliente'
+        cursor = self.ejecutar_consulta(consulta)
+
+        if cursor:
+            clientes = cursor.fetchall()
+            print("Clientes obtenidas correctamente.")
+            return clientes
+        else:
+            print("No se pudieron obtener los clientes.")
+            return []
+    
     def obtener_reservas(self):
         """Obtiene todas las reservas de la base de datos."""
         consulta = 'SELECT * FROM Reserva'
@@ -216,4 +279,7 @@ class GestorDB:
         else:
             return []
 
-        
+    #*********************** REPORTES **************************
+
+
+

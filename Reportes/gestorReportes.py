@@ -5,7 +5,7 @@ from Reportes.validaciones import *
 from Reportes.graficos import graficar_ocupacion_promedio, graficar_ingresos_mensuales
 
 class GestorReportes:
-    def __init__(self):
+    def __init__(self,gestor_db = None):
         self.reportes = []
 
     def generar_reporte_reservas(self, fecha_inicio, fecha_fin):
