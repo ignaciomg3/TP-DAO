@@ -8,6 +8,7 @@ class HotelApp:
         self.root = root
         self.root.title("Gestor Hotel")
         self.db = GestorDB()
+        root.minsize(600, 600)
 
         # Botones en la ventana principal
         ttk.Button(root, text="Registrar Nueva Habitación", command=self.ventana_registrar_habitacion).pack(pady=10)
