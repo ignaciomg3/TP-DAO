@@ -95,7 +95,7 @@ class GestorDB:
             print("Habitación insertada correctamente.")
 
     def obtener_habitaciones(self):
-        """Obtiene todas las habitaciones de la base de datos."""
+        #mostrar habitaciones
         consulta = 'SELECT * FROM Habitacion'
         cursor = self.ejecutar_consulta(consulta)
 
