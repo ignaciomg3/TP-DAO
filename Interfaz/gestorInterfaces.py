@@ -1,11 +1,12 @@
-from IHabitaciones import IHabitaciones
+from Interfaz.Ihabitaciones import HotelApp
 
 #Clase GestorInterfaces
 def usar_IHabitaciones():
-    habitaciones = IHabitaciones()
+    habitaciones = HotelApp()
     habitaciones.listar_habitaciones()
     # Aquí puedes llamar a los métodos de IHabitaciones
     # Por ejemplo: habitaciones.algun_metodo()
+    
 class GestorInterfaces:
     def __init__(self):
         pass

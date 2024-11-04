@@ -1,7 +1,9 @@
 from Datos.gestor_db import GestorDB
 
 def main():
-    gestor = GestorDB()
+    gestorBaseDatos = GestorDB()
+    gestorBaseDatos.borrar_base_de_datos()
+    print("Base de datos borrada.")
     
     while True:
         print("\n********** Menú del Sistema de Gestión de Hotel **********")
@@ -10,8 +12,9 @@ def main():
         print("3. Realizar una reserva")
         print("4. Generar una factura")
         print("5. Registrar un empleado")
-        print("6. Salir")
-        
+        print("6. Crear la base de datos y rellenarla con datos de ejemplo")
+        print("7. Mostrar habitaciones")
+        print("15. Salir del sistema")
         opcion = input("Seleccione una opción: ")
         
         if opcion == "1":
@@ -71,6 +74,39 @@ def main():
             gestor.desconectar()
 
         elif opcion == "6":
+            print("Creando la base de datos...")
+            
+            gestorBaseDatos.crear_tablas()
+            print("Base de datos creada y tablas inicializadas con datos de ejemplo.")
+ 
+            print("Mostrando datos de las tablas...")
+
+            print("\nHabitaciones:")
+            habitaciones = gestorBaseDatos.obtener_habitaciones()
+            for habitacion in habitaciones:
+                print(habitacion)
+
+            print("\nClientes:")
+            clientes = gestorBaseDatos.obtener_clientes()
+            for cliente in clientes:
+                print(cliente)
+
+            print("\nReservas:")
+            reservas = gestorBaseDatos.obtener_reservas()
+            for reserva in reservas:
+                print(reserva)
+
+            print("\nFacturas:")
+            facturas = gestorBaseDatos.obtener_facturas()
+            for factura in facturas:
+                print(factura)
+
+            print("\nEmpleados:")
+            empleados = gestorBaseDatos.obtener_empleados()
+            for empleado in empleados:
+                print(empleado)
+            
+        elif opcion == "15":
             print("Saliendo del sistema...")
             break
 
