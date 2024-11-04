@@ -4,8 +4,8 @@ from Datos.gestor_db import GestorDB
 from Entidades.cliente import Cliente
 
 
-def ventana_registrar_cliente(self):
-    ventana = tk.Toplevel(self.root)
+def ventana_registrar_cliente(root, db):
+    ventana = tk.Toplevel(root)
     ventana.title("Registrar Cliente")
 
     # Campos de entrada
@@ -33,9 +33,9 @@ def ventana_registrar_cliente(self):
     email_entry = tk.Entry(ventana)
     email_entry.pack()
 
-    # Botón para registrar habitación
-    tk.Button(ventana, text="Registrar", command=lambda: self.registrar_cliente(
-        id_cliente_entry.get(), nombre_entry.get(), apellido_entry.get(), direccion_entry.get(), telefono_entry.get(), email_entry.get(), ventana
+    # Botón para registrar CLIENTE
+    tk.Button(ventana, text="Registrar", command=lambda: registrar_cliente(
+        id_cliente_entry.get(), nombre_entry.get(), apellido_entry.get(), direccion_entry.get(), telefono_entry.get(), email_entry.get(), ventana, db
     )).pack(pady=10)
 
 def registrar_cliente(id_cliente, nombre, apellido, direccion, telefono, email, ventana, db):
@@ -46,11 +46,11 @@ def registrar_cliente(id_cliente, nombre, apellido, direccion, telefono, email, 
     except ValueError:
         messagebox.showerror("Error", "Por favor ingrese datos válidos.")
 
-def ventana_ver_clientes(self):
-    ventana = tk.Toplevel(self.root, self.db)
+def ventana_ver_clientes(root, db):
+    ventana = tk.Toplevel(root)
     ventana.title("Lista de Clientes")
 
-    clientes = self.db.obtener_clientes()
+    clientes = db.obtener_clientes()
     for cliente in clientes:
         tk.Label(ventana, text=f"ID: {cliente[0]}, Nombre: {cliente[1]}, Apellido: {cliente[2]}, Direccion: {cliente[3]}, Telefono: {cliente[4]}, Email: {cliente[5]}").pack()
 
