@@ -116,7 +116,20 @@ class GestorDB:
         resultado = self.ejecutar_consulta(consulta, (id_cliente, nombre, apellido, direccion, telefono, email))
         if resultado:
             print("Cliente insertado correctamente.")
+    
+    def obtener_clientes(self):
+        #mostrar clientes
+        consulta = 'SELECT * FROM Cliente'
+        cursor = self.ejecutar_consulta(consulta)
 
+        if cursor:
+            clientes = cursor.fetchall()
+            print("Clientes obtenidas correctamente.")
+            return clientes
+        else:
+            print("No se pudieron obtener los clientes.")
+            return []
+            
     def insertar_reserva(self, id_reserva, id_cliente, numero_habitacion, fecha_entrada, fecha_salida, cantidad_personas):
         """Inserta una nueva reserva en la base de datos."""
         consulta = '''
