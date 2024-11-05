@@ -68,7 +68,7 @@ class GestorDB:
         
     def _crear_tabla_clientes(self):
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS clientes (
-                                id INTEGER,
+                                id_cliente INTEGER,
                                 nombre TEXT,
                                 apellido TEXT,
                                 direccion TEXT,
@@ -80,7 +80,7 @@ class GestorDB:
     def _crear_tabla_empleados(self):
         """Crea la tabla empleados si no existe."""
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS empleados (
-                               id INTEGER,
+                               id_empleado INTEGER,
                                nombre TEXT NOT NULL,
                                apellido TEXT NOT NULL,
                                cargo TEXT NOT NULL,
@@ -92,7 +92,7 @@ class GestorDB:
     def _crear_tabla_reservas(self):
         """Crea la tabla reservas si no existe."""
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS reservas (
-                               id INTEGER,
+                               id_reserva INTEGER,
                                id_cliente INTEGER NOT NULL,
                                numero_habitacion INTEGER NOT NULL,
                                fecha_entrada TEXT NOT NULL,
@@ -105,7 +105,7 @@ class GestorDB:
     def _crear_tabla_facturas(self):
         """Crea la tabla facturas si no existe."""
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS facturas (
-                               id INTEGER,
+                               id_factura INTEGER,
                                id_cliente INTEGER NOT NULL,
                                id_reserva INTEGER NOT NULL,
                                fecha_emision TEXT NOT NULL,
@@ -137,7 +137,7 @@ class GestorDB:
                                     ])
         self.conn.commit()
         # Insertar datos de prueba en la tabla clientes
-        self.cursor.executemany('''INSERT INTO clientes (id, nombre, apellido, direccion, telefono, email)
+        self.cursor.executemany('''INSERT INTO clientes (id_cliente, nombre, apellido, direccion, telefono, email)
                                     VALUES (?, ?, ?, ?, ?, ?)''', [
                                         (1, 'Juan', 'Pérez', 'Calle 123', '123456789', 'juan.perez@mail.com'),
                                         (2, 'Ana', 'Gómez', 'Avenida 456', '987654321', 'ana.gomez@mail.com'),
@@ -152,7 +152,7 @@ class GestorDB:
                                     ])
         self.conn.commit()
 
-        self.cursor.executemany('''INSERT INTO empleados (id, nombre, apellido, cargo, sueldo)
+        self.cursor.executemany('''INSERT INTO empleados (id_empleado, nombre, apellido, cargo, sueldo)
                         VALUES (?, ?, ?, ?, ?)''', [
                             (1, 'Pedro', 'Lopez', 'Recepcionista', 2500.00),
                             (2, 'Laura', 'Martinez', 'Servicio de limpieza', 1800.00),
@@ -167,7 +167,7 @@ class GestorDB:
                         ])
         self.conn.commit()
 
-        self.cursor.executemany('''INSERT INTO reservas (id, id_cliente, numero_habitacion, fecha_entrada, fecha_salida, cantidad_personas)
+        self.cursor.executemany('''INSERT INTO reservas (id_reserva, id_cliente, numero_habitacion, fecha_entrada, fecha_salida, cantidad_personas)
                         VALUES (?, ?, ?, ?, ?, ?)''', [
                             (1, 1, 101, '2024-03-01', '2024-03-05', 2),
                             (2, 2, 102, '2024-03-10', '2024-03-15', 1),
@@ -183,7 +183,7 @@ class GestorDB:
         self.conn.commit()
 
         
-        self.cursor.executemany('''INSERT INTO facturas (id, id_cliente, id_reserva, fecha_emision, total)
+        self.cursor.executemany('''INSERT INTO facturas (id_factura, id_cliente, id_reserva, fecha_emision, total)
                         VALUES (?, ?, ?, ?, ?)''', [
                             (1, 1, 1, '2024-03-05', 500.00),
                             (2, 2, 2, '2024-03-15', 300.00),
@@ -248,62 +248,136 @@ class GestorDB:
         '''
         self.ejecutar_consulta(consulta, (id_empleado, nombre, apellido, cargo, sueldo))
         print("Empleado insertado correctamente.")
+        
     
     #***************************** CONSULTAS ***********************
     def obtener_habitaciones(self):
         """Obtiene todas las habitaciones de la base de datos."""
+        self.conectar()
         consulta = 'SELECT * FROM habitaciones'
+        cursor = self.ejecutar_consulta(consulta)
+        if cursor:
+            habitaciones = cursor.fetchall()
+            self.desconectar()
+            return habitaciones
+        else:
+            print("No se pudieron obtener las habitaciones.")
+            self.desconectar()
+            return []
+   
+    def obtener_clientes(self):
+        """Obtiene todos los clientes de la base de datos."""
+        self.conectar()
+        consulta = 'SELECT * FROM clientes'
+        cursor = self.ejecutar_consulta(consulta)
+        if cursor:
+            clientes = cursor.fetchall()
+            self.desconectar()
+            return clientes
+        else:
+            print("No se pudieron obtener los clientes.")
+            self.desconectar()
+            return []
+        
+    
+    def obtener_reservas(self):
+        
+        """Obtiene todas las reservas de la base de datos."""
+        self.conectar()
+        consulta = 'SELECT * FROM reservas'
+        cursor = self.ejecutar_consulta(consulta)
+        if cursor:
+            reservas = cursor.fetchall()
+            self.desconectar()
+            return reservas
+        else:
+            self.desconectar()
+            return []
+        
+    def obtener_facturas(self):
+        
+        """Obtiene todas las facturas de la base de datos."""
+        self.conectar()
+        consulta = 'SELECT * FROM facturas'
+        cursor = self.ejecutar_consulta(consulta)
+        if cursor:
+            facturas = cursor.fetchall()
+            self.desconectar()
+            return facturas
+        else:
+            self.desconectar()
+            return []
+        
+    def obtener_empleados(self):
+        
+        """Obtiene todos los empleados de la base de datos."""
+        self.conectar()
+        consulta = 'SELECT * FROM empleados'
+        cursor = self.ejecutar_consulta(consulta)
+        if cursor:
+            empleados = cursor.fetchall()
+            self.desconectar()
+            return empleados
+        else:
+            self.desconectar()
+            return []
+
+    #***************************** ACTUALIZAR DATOS ***********************
+
+    #***************************** ELIMINAR DATOS ***********************
+
+    def eliminar_habitacion(self, numero):
+        """Elimina una habitación de la base de datos por su número."""
+        consulta = 'DELETE FROM habitaciones WHERE numero = ?'
+        resultado = self.ejecutar_consulta(consulta, (numero,))
+        if resultado:
+            print("Habitación eliminada correctamente.")
+
+    def eliminar_cliente(self, id_cliente):
+        """Elimina un cliente de la base de datos por su ID."""
+        consulta = 'DELETE FROM clientes WHERE id = ?'
+        resultado = self.ejecutar_consulta(consulta, (id_cliente,))
+        if resultado:
+            print("Cliente eliminado correctamente.")
+
+    def eliminar_empleado(self, id_empleado):
+        """Elimina un empleado de la base de datos por su ID."""
+        consulta = 'DELETE FROM empleados WHERE id = ?'
+        resultado = self.ejecutar_consulta(consulta, (id_empleado,))
+        if resultado:
+            print("Empleado eliminado correctamente.")
+
+    def eliminar_reserva(self, id_reserva):
+        """Elimina una reserva de la base de datos por su ID."""
+        consulta = 'DELETE FROM reservas WHERE id = ?'
+        resultado = self.ejecutar_consulta(consulta, (id_reserva,))
+        if resultado:
+            print("Reserva eliminada correctamente.")
+
+    # def eliminar_factura(self, id_factura):
+    #     """Elimina una factura de la base de datos por su ID."""
+    #     consulta = 'DELETE FROM facturas WHERE id = ?'
+    #     resultado = self.ejecutar_consulta(consulta, (id_factura,))
+    #     if resultado:
+    #         print("Factura eliminada correctamente.")
+
+#***************************** INTERFAZ **************************
+    
+    def obtener_habitaciones_para_reserva(self):
+        """Obtiene las habitaciones disponibles para reservar."""
+        consulta ="""SELECT h.numero, h.tipo
+        FROM habitaciones h
+        where h.estado = 'disponible' """
         cursor = self.ejecutar_consulta(consulta)
         if cursor:
             habitaciones = cursor.fetchall()
             return habitaciones
         else:
             print("No se pudieron obtener las habitaciones.")
-            return []
-   
-    def obtener_clientes(self):
-        """Obtiene todos los clientes de la base de datos."""
-        consulta = 'SELECT * FROM clientes'
-        cursor = self.ejecutar_consulta(consulta)
-        if cursor:
-            clientes = cursor.fetchall()
-            return clientes
-        else:
-            print("No se pudieron obtener los clientes.")
-            return []
-        
+        return []
     
-    def obtener_reservas(self):
-        """Obtiene todas las reservas de la base de datos."""
-        consulta = 'SELECT * FROM reservas'
-        cursor = self.ejecutar_consulta(consulta)
-        if cursor:
-            reservas = cursor.fetchall()
-            return reservas
-        else:
-            return []
-        
-    def obtener_facturas(self):
-        """Obtiene todas las facturas de la base de datos."""
-        consulta = 'SELECT * FROM facturas'
-        cursor = self.ejecutar_consulta(consulta)
-        if cursor:
-            facturas = cursor.fetchall()
-            return facturas
-        else:
-            return []
-        
-    def obtener_empleados(self):
-        """Obtiene todos los empleados de la base de datos."""
-        consulta = 'SELECT * FROM empleados'
-        cursor = self.ejecutar_consulta(consulta)
-        if cursor:
-            empleados = cursor.fetchall()
-            return empleados
-        else:
-            return []
 
-    #*********************** REPORTES **************************
+#*********************** REPORTES **************************
 
 
 
