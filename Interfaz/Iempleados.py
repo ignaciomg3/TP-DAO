@@ -6,37 +6,52 @@ from Entidades.empleado import Empleado
 
 def ventana_registrar_empleado(root, db):
     ventana = tk.Toplevel(root)
-    ventana.title("Registrar Empleado")
+    ventana.minsize(400, 400)
+    ventana.geometry("400x400")
+    ventana.configure(bg="#f0f0f0")
+
+    # Estilo de etiquetas y entradas
+    label_style = {"font": ("Helvetica", 12), "bg": "#f0f0f0"}
+    entry_style = {"font": ("Helvetica", 12), "bg": "#ffffff", "bd": 2, "relief": "groove"}
 
     # Campos de entrada
-    tk.Label(ventana, text="ID de Empleado:").pack()
-    id_empleado_entry = tk.Entry(ventana)
-    id_empleado_entry.pack()
+    tk.Label(ventana, text="ID de Empleado:", **label_style).pack(pady=(10, 5))
+    id_empleado_entry = tk.Entry(ventana, **entry_style)
+    id_empleado_entry.pack(pady=(0, 10))
 
-    tk.Label(ventana, text=" Nombre :").pack()
-    nombre_entry = tk.Entry(ventana)
-    nombre_entry.pack()
+    tk.Label(ventana, text="Nombre:", **label_style).pack(pady=(10, 5))
+    nombre_entry = tk.Entry(ventana, **entry_style)
+    nombre_entry.pack(pady=(0, 10))
 
-    tk.Label(ventana, text="Apellido:").pack()
-    apellido_entry = tk.Entry(ventana)
-    apellido_entry.pack()
+    tk.Label(ventana, text="Apellido:", **label_style).pack(pady=(10, 5))
+    apellido_entry = tk.Entry(ventana, **entry_style)
+    apellido_entry.pack(pady=(0, 10))
 
-    tk.Label(ventana, text="Cargo:").pack()
-    cargo_entry = tk.Entry(ventana)
-    cargo_entry.pack()
+    tk.Label(ventana, text="Cargo:", **label_style).pack(pady=(10, 5))
+    cargo_entry = tk.Entry(ventana, **entry_style)
+    cargo_entry.pack(pady=(0, 10))
 
-    tk.Label(ventana, text="Sueldo:").pack()
-    sueldo_entry = tk.Entry(ventana)
-    sueldo_entry.pack()
+    tk.Label(ventana, text="Sueldo:", **label_style).pack(pady=(10, 5))
+    sueldo_entry = tk.Entry(ventana, **entry_style)
+    sueldo_entry.pack(pady=(0, 10))
 
     # Botón para registrar CLIENTE
-    tk.Button(ventana, text="Registrar", command=lambda: registrar_empleado(
-        id_empleado_entry.get(), nombre_entry.get(), apellido_entry.get(), cargo_entry.get(), sueldo_entry.get(), ventana, db
-    )).pack(pady=10)
+    tk.Button(
+        ventana, text="Registrar", command=lambda: registrar_empleado(
+            id_empleado_entry.get(), nombre_entry.get(), apellido_entry.get(), cargo_entry.get(), sueldo_entry.get(), ventana, db
+        ), font=("Helvetica", 12), bg="#0b8ad8", fg="white", bd=0, relief="flat", padx=10, pady=5
+    ).pack(pady=20)
 
 def registrar_empleado(id_empleado, nombre, apellido, cargo, sueldo, ventana, db):
+    if not id_empleado or not nombre or not apellido or not cargo or not sueldo:
+        messagebox.showerror("Error", "Todos los campos son obligatorios.")
+        return
     try:
         db.insertar_empleado(id_empleado, nombre, apellido, cargo, sueldo)
+        messagebox.showinfo("Registro Exitoso", f"Empleado {nombre} {apellido} registrado con éxito.")
+        ventana.destroy()
+    except ValueError:
+        messagebox.showerror("Error", "Por favor ingrese datos válidos.")
         messagebox.showinfo("Registro Exitoso", f"Empleado {nombre} {apellido} registrado con éxito.")
         ventana.destroy()
     except ValueError:

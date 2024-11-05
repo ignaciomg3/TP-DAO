@@ -7,38 +7,70 @@ from Entidades.cliente import Cliente
 def ventana_registrar_cliente(root, db):
     ventana = tk.Toplevel(root)
     ventana.title("Registrar Cliente")
+    ventana.geometry("400x650")
+    ventana.configure(bg="#e6f3f5")
 
-    # Campos de entrada
-    ttk.Label(ventana, text="ID de Cliente:").pack()
-    id_cliente_entry = ttk.Entry(ventana)
-    id_cliente_entry.pack()
+    # Crear un marco con padding y estilo
+    frame = ttk.Frame(ventana, padding=15)
+    frame.pack(fill="both", expand=True, padx=10, pady=10)
 
-    ttk.Label(ventana, text=" Nombre :").pack()
-    nombre_entry = ttk.Entry(ventana)
-    nombre_entry.pack()
+    # Título estilizado
+    ttk.Label(frame, text="Registrar Cliente", font=("Helvetica", 14, "bold")).pack(pady=(0, 10))
 
-    ttk.Label(ventana, text="Apellido:").pack()
-    apellido_entry = ttk.Entry(ventana)
-    apellido_entry.pack()
+    # ID de Cliente
+    ttk.Label(frame, text="ID de Cliente:", font=("Helvetica", 10)).pack(anchor="w", pady=(5, 0))
+    id_cliente_entry = ttk.Entry(frame, font=("Helvetica", 10))
+    id_cliente_entry.pack(fill="x", pady=5)
 
-    ttk.Label(ventana, text="Dirección:").pack()
-    direccion_entry = ttk.Entry(ventana)
-    direccion_entry.pack()
+    # Nombre
+    ttk.Label(frame, text="Nombre:", font=("Helvetica", 10)).pack(anchor="w", pady=(5, 0))
+    nombre_entry = ttk.Entry(frame, font=("Helvetica", 10))
+    nombre_entry.pack(fill="x", pady=5)
 
-    ttk.Label(ventana, text="Telefono:").pack()
-    telefono_entry = ttk.Entry(ventana)
-    telefono_entry.pack()
+    # Apellido
+    ttk.Label(frame, text="Apellido:", font=("Helvetica", 10)).pack(anchor="w", pady=(5, 0))
+    apellido_entry = ttk.Entry(frame, font=("Helvetica", 10))
+    apellido_entry.pack(fill="x", pady=5)
 
-    ttk.Label(ventana, text="Email:").pack()
-    email_entry = ttk.Entry(ventana)
-    email_entry.pack()
+    # Dirección
+    ttk.Label(frame, text="Dirección:", font=("Helvetica", 10)).pack(anchor="w", pady=(5, 0))
+    direccion_entry = ttk.Entry(frame, font=("Helvetica", 10))
+    direccion_entry.pack(fill="x", pady=5)
 
-    # Botón para registrar CLIENTE
-    ttk.Button(ventana, text="Registrar", command=lambda: registrar_cliente(
-        id_cliente_entry.get(), nombre_entry.get(), apellido_entry.get(), direccion_entry.get(), telefono_entry.get(), email_entry.get(), ventana, db
-    )).pack(pady=10)
+    # Teléfono
+    ttk.Label(frame, text="Teléfono:", font=("Helvetica", 10)).pack(anchor="w", pady=(5, 0))
+    telefono_entry = ttk.Entry(frame, font=("Helvetica", 10))
+    telefono_entry.pack(fill="x", pady=5)
+
+    # Email
+    ttk.Label(frame, text="Email:", font=("Helvetica", 10)).pack(anchor="w", pady=(5, 0))
+    email_entry = ttk.Entry(frame, font=("Helvetica", 10))
+    email_entry.pack(fill="x", pady=5)
+
+    # Botón para registrar cliente
+    registrar_btn = ttk.Button(frame, text="Registrar", 
+                               command=lambda: registrar_cliente(
+        id_cliente_entry.get(),
+        nombre_entry.get(), 
+        apellido_entry.get(), 
+        direccion_entry.get(),
+        telefono_entry.get(),
+        email_entry.get(), 
+        ventana, 
+        db
+    ))
+    registrar_btn.pack(pady=10)
+    
+    # Aplicar estilo al botón
+    registrar_btn.configure(style="TButton")
+    estilo = ttk.Style()
+    estilo.configure("TButton", font=("Helvetica", 10, "bold"), foreground="#AAAAAA", background="#4caf50")
 
 def registrar_cliente(id_cliente, nombre, apellido, direccion, telefono, email, ventana, db):
+    
+    if not all([id_cliente, nombre, apellido, direccion, telefono, email]):
+        messagebox.showwarning("Campos incompletos", "Por favor complete todos los campos antes de registrar.")
+        return  # Salir de la función si falta algún dato
     try:
         db.insertar_cliente(id_cliente, nombre, apellido, direccion, telefono, email)
         messagebox.showinfo("Registro Exitoso", f"Cliente {nombre} {apellido} registrado con éxito.")
@@ -107,3 +139,6 @@ def ventana_ver_clientes(root, db):
     h_scrollbar.pack(side="bottom", fill="x")
 
 # Asegúrate de cerrar la conexión a la base de datos al finalizar
+
+
+

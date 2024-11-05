@@ -17,7 +17,7 @@ class HotelApp:
     def ventana_registrar_habitacion(self):
         ventana = tk.Toplevel(self.root)
         ventana.title("Registrar Habitación")
-
+        
         # Campos de entrada
         tk.Label(ventana, text="Número de Habitación:").pack()
         numero_entry = tk.Entry(ventana)

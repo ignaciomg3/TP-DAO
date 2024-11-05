@@ -32,6 +32,7 @@ def ventana_ver_habitaciones(root, db):
 
     ventana = tk.Toplevel(root)
     ventana.title("Lista de Habitaciones")
+    ventana.minsize(400, 500)
     ventana.geometry("900x600+0+0")
     
     # Título estilizado

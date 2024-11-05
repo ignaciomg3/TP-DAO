@@ -1,3 +1,4 @@
+
 class Habitacion:
     def __init__(self, numero, tipo, estado, precio_por_noche):
         self.numero = numero

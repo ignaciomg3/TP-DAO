@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from Datos.gestor_db import GestorDB
 from Interfaz.Ihabitacion import *
-from Interfaz.Imostrar_habtiaciones import *
+from Interfaz.Imostrar_habitaciones import *
 from Interfaz.Iclientes import *
 from Interfaz.Ireserva import *
 from Interfaz.Iempleados import *
