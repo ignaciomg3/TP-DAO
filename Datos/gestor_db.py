@@ -31,6 +31,16 @@ class GestorDB:
             self.conn.close()
             print("Conexión a la base de datos cerrada.")
 
+    def mostrar_tablas(self):
+        """Muestra las tablas de la base de datos."""
+        self.conectar()
+        self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tablas = self.cursor.fetchall()
+        print("Tablas en la base de datos:")
+        for tabla in tablas:
+            print(tabla[0])
+        ##self.desconectar()()
+
     def ejecutar_consulta(self, consulta, parametros=()):
         """Ejecuta una consulta SQL con parámetros opcionales."""
         try:
@@ -55,7 +65,7 @@ class GestorDB:
         # Llamar a otras funciones de creación de tablas aquí...
         
         self._insertar_datos_iniciales()
-        #self.desconectar()
+        ##self.desconectar()()
         print("Tablas creadas y datos iniciales insertados..función _crear_tablas().")
 
     def _crear_tabla_habitaciones(self):
@@ -75,7 +85,6 @@ class GestorDB:
                                 telefono TEXT,
                                 email TEXT)''')
         print("Tabla clientes creada correctamente.")
-
         
     def _crear_tabla_empleados(self):
         """Crea la tabla empleados si no existe."""
@@ -181,7 +190,6 @@ class GestorDB:
                             (10, 10, 203, '2024-03-20', '2024-03-25', 1)
                         ])
         self.conn.commit()
-
         
         self.cursor.executemany('''INSERT INTO facturas (id_factura, id_cliente, id_reserva, fecha_emision, total)
                         VALUES (?, ?, ?, ?, ?)''', [
@@ -258,11 +266,11 @@ class GestorDB:
         cursor = self.ejecutar_consulta(consulta)
         if cursor:
             habitaciones = cursor.fetchall()
-            self.desconectar()
+            #self.desconectar()
             return habitaciones
         else:
             print("No se pudieron obtener las habitaciones.")
-            self.desconectar()
+            ##self.desconectar()
             return []
    
     def obtener_clientes(self):
@@ -272,11 +280,12 @@ class GestorDB:
         cursor = self.ejecutar_consulta(consulta)
         if cursor:
             clientes = cursor.fetchall()
-            self.desconectar()
+            #self.desconectar()
+            print("Clientes obtenidos correctamente.")
             return clientes
         else:
             print("No se pudieron obtener los clientes.")
-            self.desconectar()
+            #self.desconectar()
             return []
         
     
@@ -288,10 +297,10 @@ class GestorDB:
         cursor = self.ejecutar_consulta(consulta)
         if cursor:
             reservas = cursor.fetchall()
-            self.desconectar()
+            #self.desconectar()
             return reservas
         else:
-            self.desconectar()
+            #self.desconectar()
             return []
         
     def obtener_facturas(self):
@@ -305,7 +314,7 @@ class GestorDB:
             self.desconectar()
             return facturas
         else:
-            self.desconectar()
+            #self.desconectar()()
             return []
         
     def obtener_empleados(self):
@@ -316,10 +325,10 @@ class GestorDB:
         cursor = self.ejecutar_consulta(consulta)
         if cursor:
             empleados = cursor.fetchall()
-            self.desconectar()
+            #self.desconectar()()
             return empleados
         else:
-            self.desconectar()
+            #self.desconectar()()
             return []
 
     #***************************** ACTUALIZAR DATOS ***********************
@@ -335,21 +344,21 @@ class GestorDB:
 
     def eliminar_cliente(self, id_cliente):
         """Elimina un cliente de la base de datos por su ID."""
-        consulta = 'DELETE FROM clientes WHERE id = ?'
+        consulta = 'DELETE FROM clientes WHERE id_cliente = ?'
         resultado = self.ejecutar_consulta(consulta, (id_cliente,))
         if resultado:
             print("Cliente eliminado correctamente.")
 
     def eliminar_empleado(self, id_empleado):
         """Elimina un empleado de la base de datos por su ID."""
-        consulta = 'DELETE FROM empleados WHERE id = ?'
+        consulta = 'DELETE FROM empleados WHERE id_empleado = ?'
         resultado = self.ejecutar_consulta(consulta, (id_empleado,))
         if resultado:
             print("Empleado eliminado correctamente.")
 
     def eliminar_reserva(self, id_reserva):
         """Elimina una reserva de la base de datos por su ID."""
-        consulta = 'DELETE FROM reservas WHERE id = ?'
+        consulta = 'DELETE FROM reservas WHERE id_reserva = ?'
         resultado = self.ejecutar_consulta(consulta, (id_reserva,))
         if resultado:
             print("Reserva eliminada correctamente.")
