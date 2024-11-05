@@ -5,6 +5,7 @@ from Interfaz.Ihabitacion import *
 from Interfaz.Imostrar_habtiaciones import *
 from Interfaz.Iclientes import *
 from Interfaz.Ireserva import *
+from Interfaz.Iempleados import *
 
 class HotelApp:
     def __init__(self, root):
@@ -21,6 +22,8 @@ class HotelApp:
         ttk.Button(root, text="Registrar Nuevo Cliente", command=self.abrir_ventana_registrar_cliente).pack(pady=10)
         ttk.Button(root, text="Ver Clientes", command=self.abrir_ventana_ver_clientes).pack(pady=10)
         ttk.Button(root, text="Registrar Reservas", command=self.abrir_ventana_registrar_reserva).pack(pady=10)
+        ttk.Button(root, text="Ver Empleados", command=self.abrir_ventana_ver_empleados).pack(pady=10)
+        ttk.Button(root, text="Registrar Empleado", command=self.abrir_ventana_registrar_empleado).pack(pady=10)
         #ttk.Button(root, text="Ver Reservas", command=self.abrir_ventana_ver_reservas).pack(pady=10)
 
     def abrir_ventana_registrar(self):
@@ -37,6 +40,11 @@ class HotelApp:
 
     def abrir_ventana_registrar_reserva(self):
         ventana_registrar_reserva(self.root, self.db)
-        
+    
+    def abrir_ventana_registrar_empleado(self):
+        ventana_registrar_empleado(self.root, self.db)
+
+    def abrir_ventana_ver_empleados(self):
+        ventana_ver_empleados(self.root, self.db)    
     #def abrir_ventana_ver_reservas(self):
     #    ventana_ver_reservas(self.root, self.db)
