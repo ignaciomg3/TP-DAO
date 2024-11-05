@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from Interfaz.gui import HotelApp
 
 if __name__ == "__main__":

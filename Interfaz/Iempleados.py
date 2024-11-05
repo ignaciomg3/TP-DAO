@@ -45,9 +45,62 @@ def registrar_empleado(id_empleado, nombre, apellido, cargo, sueldo, ventana, db
 def ventana_ver_empleados(root, db):
     ventana = tk.Toplevel(root)
     ventana.title("Lista de Empleados")
+    ventana.geometry("900x600+0+0")
 
+    # Título estilizado
+    titulo = ttk.Label(ventana, text="Listado de Empleados", font=("Helvetica", 16, "bold"))
+    titulo.pack(pady=(10, 5))
+
+    # Crear un marco para la tabla con borde y padding
+    frame = ttk.Frame(ventana, padding=10, relief="solid", borderwidth=1)
+    frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+    # Estilos para Treeview
+    estilo = ttk.Style()
+    estilo.configure("Treeview", font=("Helvetica", 10), rowheight=25)
+    estilo.configure("Treeview.Heading", font=("Helvetica", 12, "bold"), background="#0b8ad8", foreground="black")
+    estilo.map("Treeview", background=[("selected", "#0b8ad8")])
+
+    # Crear el widget Treeview
+    columnas = ("id", "nombre", "apellido", "cargo", "sueldo")
+    tree = ttk.Treeview(frame, columns=columnas, show="headings", height=10)
+    tree.pack(fill="both", expand=True)
+
+    # Definir encabezados de columna
+    tree.heading("id", text="ID")
+    tree.heading("nombre", text="Nombre")
+    tree.heading("apellido", text="Apellido")
+    tree.heading("cargo", text="Cargo")
+    tree.heading("sueldo", text="Sueldo")
+
+    # Ajustar el ancho de las columnas
+    tree.column("id", width=50, anchor="center")
+    tree.column("nombre", width=150, anchor="center")
+    tree.column("apellido", width=150, anchor="center")
+    tree.column("cargo", width=150, anchor="center")
+    tree.column("sueldo", width=100, anchor="center")
+
+    # Alternar el color de fondo de las filas
+    tree.tag_configure("oddrow", background="#f2f2f2")
+    tree.tag_configure("evenrow", background="#ffffff")
+
+    # Agregar datos a la tabla
     empleados = db.obtener_empleados()
-    for empleado in empleados:
-        tk.Label(ventana, text=f"ID: {empleado[0]}, Nombre: {empleado[1]}, Apellido: {empleado[2]}, Cargo: {empleado[3]}, Sueldo: {empleado[4]}").pack()
+    for i, empleado in enumerate(empleados):
+        tag = "evenrow" if i % 2 == 0 else "oddrow"
+        tree.insert("", "end", values=empleado, tags=(tag,))
+
+    # Barra de desplazamiento vertical
+    scrollbar = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
+    tree.configure(yscroll=scrollbar.set)
+    scrollbar.pack(side="right", fill="y")
+
+    # Barra de desplazamiento horizontal (opcional, si es necesario)
+    h_scrollbar = ttk.Scrollbar(frame, orient="horizontal", command=tree.xview)
+    tree.configure(xscroll=h_scrollbar.set)
+    h_scrollbar.pack(side="bottom", fill="x")
+
+# Ejemplo de cómo llamar a la función
+# ventana_ver_empleados(root, db)
 
 # Asegúrate de cerrar la conexión a la base de datos al finalizar
