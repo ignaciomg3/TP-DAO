@@ -2,7 +2,7 @@ from Datos.gestor_db import GestorDB
 
 def generar_reporte_ingresos():  # sourcery skip: use-named-expression
     gestor_db = GestorDB()
-    ingresos_por_habitacion = {}
+    ingresos_por_habitacion = []
 
     try:
         gestor_db.conectar()
@@ -20,8 +20,8 @@ def generar_reporte_ingresos():  # sourcery skip: use-named-expression
         if cursor:
             for fila in cursor.fetchall():
                 numero_habitacion, total_ingresos = fila
-                ingresos_por_habitacion[numero_habitacion] = total_ingresos
-        
+                ingresos_por_habitacion.append((numero_habitacion, total_ingresos))
+
     except Exception as e:
         print(f"Error al generar el reporte de ingresos por habitación: {e}")
     

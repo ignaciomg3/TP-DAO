@@ -1,4 +1,5 @@
 from Datos.gestor_db import GestorDB
+from Entidades.reserva import *
 
 def listar_reservas(fecha_inicio, fecha_fin):
     lista_reservas= []
@@ -12,10 +13,16 @@ def listar_reservas(fecha_inicio, fecha_fin):
     
     reservas = cursor.fetchall() if cursor else []
     for r in reservas:
-            numero_habitacion = r[2]  # Asegúrate de que el índice es correcto
-            fecha_entrada = r[3]  
-            fecha_salida = r[4] 
-            lista_reservas.append(r)
+            reserva = Reserva(
+                id_reserva = r[0],
+                cliente= r[1],
+                habitacion= r[2],
+                fecha_entrada= r[3],
+                fecha_salida= r[4],
+                cantidad_personas= r[5],
+            )
+            
+            lista_reservas.append(reserva)
                 
     gestor.desconectar()
     return lista_reservas

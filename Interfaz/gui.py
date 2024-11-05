@@ -6,12 +6,14 @@ from Interfaz.Imostrar_habitaciones import *
 from Interfaz.Iclientes import *
 from Interfaz.Ireserva import *
 from Interfaz.Iempleados import *
+from Interfaz.Ireserva import *
+from Interfaz.Ireportes import *
 
 class HotelApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Gestor Hotel")
-        self.root.geometry("400x500")
+        self.root.geometry("400x650")
         self.root.config(bg="#2b3e50")  # Fondo azul oscuro
 
         self.db = GestorDB()
@@ -33,8 +35,9 @@ class HotelApp:
             ("Registrar Nuevo Cliente", self.abrir_ventana_registrar_cliente),
             ("Ver Clientes", self.abrir_ventana_ver_clientes),
             ("Registrar Reservas", self.abrir_ventana_registrar_reserva),
+            ("Registrar Empleado", self.abrir_ventana_registrar_empleado),
             ("Ver Empleados", self.abrir_ventana_ver_empleados),
-            ("Registrar Empleado", self.abrir_ventana_registrar_empleado)
+            ("Reportes", self.abrir_ventana_reportes)
         ]
 
         for texto, comando in botones:
@@ -60,3 +63,6 @@ class HotelApp:
 
     def abrir_ventana_ver_empleados(self):
         ventana_ver_empleados(self.root, self.db)    
+
+    def abrir_ventana_reportes(self):
+        ventana_reportes(self.root, self.db)

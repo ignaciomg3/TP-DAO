@@ -33,7 +33,7 @@ def ventana_registrar_habitacion(root, db):
     estado_entry = ttk.Combobox(frame, font=("Helvetica", 10), 
                                 values=["disponible", "ocupada"],
                                 state="readonly")
-    tipo_entry.current(0)  # Seleccionar "disponible" como valor predeterminado
+    estado_entry.current(0)  # Seleccionar "disponible" como valor predeterminado
     estado_entry.pack(fill="x", pady=5)
 
     # Campo de precio
