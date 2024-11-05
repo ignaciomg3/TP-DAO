@@ -2,21 +2,11 @@ from Datos.gestor_db import GestorDB
 from time import sleep
 
 def main():
-    gestorBaseDatos = GestorDB()
-    gestorBaseDatos.borrar_base_de_datos()
-    #esperar 1 segundo
-    sleep(1)
-    gestorBaseDatos.conectar()
-    sleep(1)
-    gestorBaseDatos.crear_tablas()
-    sleep(1)
-    gestorBaseDatos._insertar_datos_iniciales()
-    sleep(1)
+    
 
     ## gestorBaseDatos.crear_tablas()
     ##rellenar tablas
 
-    
     
     while True:
         print("\n********** Menú del Sistema de Gestión de Hotel **********")
@@ -27,6 +17,8 @@ def main():
         print("5. Registrar un empleado")
         print("6. Crear la base de datos y rellenarla con datos de ejemplo")
         print("7. Mostrar Tablas")
+        #eliminar una habitacion
+        print("8. Eliminar una habitacion")
         print("15. Salir del sistema")
         opcion = input("Seleccione una opción: ")
         
@@ -87,7 +79,16 @@ def main():
             gestorBaseDatos.desconectar()
 
         elif opcion == "6":
-            print("Creando la base de datos...")
+            gestorBaseDatos = GestorDB()
+            gestorBaseDatos.borrar_base_de_datos()
+            #esperar 1 segundo
+            sleep(1)
+            gestorBaseDatos.conectar()
+            sleep(1)
+            gestorBaseDatos.crear_tablas()
+            sleep(1)
+            gestorBaseDatos._insertar_datos_iniciales()
+            sleep(1)
             
             #gestorBaseDatos.crear_tablas()
             print("Base de datos creada y tablas inicializadas con datos de ejemplo.")
@@ -121,6 +122,15 @@ def main():
             for empleado in empleados:
                 print(empleado)
             
+        #opcion 8
+        # Eliminar una habitacion
+        elif opcion == "8":
+            numero = int(input("Número de habitación a eliminar: "))
+            gestorBaseDatos.conectar()
+            gestorBaseDatos.eliminar_habitacion(numero)
+            gestorBaseDatos.desconectar()
+
+
         elif opcion == "15":
             print("Saliendo del sistema...")
             break
