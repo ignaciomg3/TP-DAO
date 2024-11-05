@@ -6,7 +6,7 @@ def reporte_ocupacion_promedio():
     consulta = '''
         SELECT tipo, AVG(ocupacion) as ocupacion_promedio
         FROM (
-            SELECT habitaciones.tipo, COUNT(reservas.id) as ocupacion
+            SELECT habitaciones.tipo, COUNT(reservas.id_reserva) as ocupacion
             FROM habitaciones
             LEFT JOIN reservas ON habitaciones.numero = reservas.numero_habitacion
             GROUP BY habitaciones.tipo

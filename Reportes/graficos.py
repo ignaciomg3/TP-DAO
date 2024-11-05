@@ -8,14 +8,14 @@ def graficar_ocupacion_promedio():
     gestor = GestorDB()
     gestor.conectar()
     consulta = '''
-        SELECT tipo_habitacion, AVG(ocupacion) as ocupacion_promedio
+        SELECT tipo, AVG(ocupacion) as ocupacion_promedio
         FROM (
-            SELECT Habitacion.tipo, COUNT(Reserva.id_reserva) as ocupacion
-            FROM Habitacion
-            LEFT JOIN Reserva ON Habitacion.numero = Reserva.numero_habitacion
-            GROUP BY Habitacion.tipo
+            SELECT habitaciones.tipo, COUNT(reservas.id_reserva) as ocupacion
+            FROM habitaciones
+            LEFT JOIN reservas ON habitaciones.numero = reservas.numero_habitacion
+            GROUP BY habitaciones.tipo
         )
-        GROUP BY tipo_habitacion
+        GROUP BY tipo
     '''
     cursor = gestor.ejecutar_consulta(consulta)
     datos = cursor.fetchall() if cursor else []
@@ -31,6 +31,7 @@ def graficar_ocupacion_promedio():
 def graficar_ingresos_mensuales():
     gestor = GestorDB()
     gestor.conectar()
+    gestor._insertar_datos_iniciales()
     # Consulta para obtener los ingresos mensuales
     sleep (1)
     consulta = '''
