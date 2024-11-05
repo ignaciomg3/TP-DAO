@@ -9,9 +9,9 @@ def generar_reporte_ingresos():  # sourcery skip: use-named-expression
         
         consulta = '''
             SELECT H.numero, SUM(F.total) as total_ingresos
-            FROM Factura F
-            JOIN Reserva R ON F.id_reserva = R.id_reserva
-            JOIN Habitacion H ON R.numero_habitacion = H.numero
+            FROM facturas F
+            JOIN reservas R ON F.id_reserva = R.id
+            JOIN habitaciones H ON R.numero_habitacion = H.numero
             GROUP BY H.numero
             ORDER BY H.numero
         '''

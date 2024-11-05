@@ -23,14 +23,6 @@ class GestorReportes:
         self.reportes.append(ocupacion)
         return ocupacion
 
-    def verificar_reserva(self, numero_habitacion, fecha_entrada, fecha_salida):
-        """Verifica si hay superposición de reservas para la misma habitación."""
-        return verificar_superposicion_reserva(numero_habitacion, fecha_entrada, fecha_salida)
-    
-    def verificar_asignaciones(self, id_empleado, fecha):
-        """Verifica que los empleados asignados a habitaciones no tengan más de 5 asignaciones diarias.."""
-        return validar_empleado_asignaciones(id_empleado, fecha)
-
     def graficar_ocupacion_promedio(self):
         """Genera un gráfico de barras mostrando la ocupación promedio por tipo de habitación."""
         graficar_ocupacion_promedio()
