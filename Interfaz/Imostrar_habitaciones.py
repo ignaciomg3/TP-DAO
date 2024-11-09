@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from datetime import datetime
-from tkcalendar import DateEntry
+#from tkcalendar import DateEntry
 
 
 def ventana_ver_habitaciones(root, db):
@@ -45,8 +45,8 @@ def ventana_ver_habitaciones(root, db):
     filtro_frame.pack(pady=10)
     
     ttk.Label(filtro_frame, text="Ingrese una fecha (yyyy-mm-dd):").pack(side="left", padx=5)
-    date_entry = DateEntry(filtro_frame, width=12, background='darkblue', foreground='white', borderwidth=2, date_pattern='yyyy-mm-dd')
-    #date_entry = ttk.Entry(filtro_frame, width=12)
+    #date_entry = DateEntry(filtro_frame, width=12, background='darkblue', foreground='white', borderwidth=2, date_pattern='yyyy-mm-dd')
+    date_entry = ttk.Entry(filtro_frame, width=12)
     date_entry.pack(side="left", padx=5)
     
     # Botón para filtrar habitaciones

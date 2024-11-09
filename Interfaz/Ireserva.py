@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from tkcalendar import DateEntry
+#from tkcalendar import DateEntry
 # from Interfaz.gestorInterfaces import GestorInterfaces
 
 def ventana_registrar_reserva(root, db):
@@ -40,14 +40,14 @@ def ventana_registrar_reserva(root, db):
 
     # Campo para seleccionar fecha de inicio con un calendario
     ttk.Label(frame, text="Fecha de Inicio:", font=("Helvetica", 10)).pack(anchor="w", pady=(5, 0))
-    fecha_inicio_entry = DateEntry(frame, font=("Helvetica", 10), date_pattern='yyyy-mm-dd')
-    #fecha_inicio_entry = ttk.Entry(frame, font=("Helvetica", 10))
+    #fecha_inicio_entry = DateEntry(frame, font=("Helvetica", 10), date_pattern='yyyy-mm-dd')
+    fecha_inicio_entry = ttk.Entry(frame, font=("Helvetica", 10))
     fecha_inicio_entry.pack(fill="x", pady=5)       
 
     # Campo para seleccionar fecha de fin con un calendario
     ttk.Label(frame, text="Fecha de Fin:", font=("Helvetica", 10)).pack(anchor="w", pady=(5, 0))
-    fecha_fin_entry = DateEntry(frame, font=("Helvetica", 10), date_pattern='yyyy-mm-dd')
-    #fecha_fin_entry = ttk.Entry(frame, font=("Helvetica", 10))
+    #fecha_fin_entry = DateEntry(frame, font=("Helvetica", 10), date_pattern='yyyy-mm-dd')
+    fecha_fin_entry = ttk.Entry(frame, font=("Helvetica", 10))
     fecha_fin_entry.pack(fill="x", pady=5)
      
    # Campo para ingresar la cantidad de personas   

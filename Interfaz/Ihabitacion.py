@@ -3,7 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from Entidades.habitacion import Habitacion
 
-def ventana_registrar_habitacion(root, db):
+def ventana_registrar_habitacion(self, root):
     ventana = tk.Toplevel(root)
     ventana.title("Registrar Habitación")
     ventana.geometry("700x600")
@@ -45,10 +45,10 @@ def ventana_registrar_habitacion(root, db):
 
     # Botón para registrar habitación
     ttk.Button(ventana, text="Registrar", command=lambda: registrar_habitacion(
-        numero_entry.get(), tipo_entry.get(), estado_entry.get(), precio_entry.get(), ventana, db
+        numero_entry.get(), tipo_entry.get(), estado_entry.get(), precio_entry.get(), ventana 
     )).pack(pady=10)
     
-
+    
     #guardar las variables en variables.
     #variables = [numero_entry, tipo_entry, estado_entry, precio_entry]
     #return variables
@@ -67,9 +67,11 @@ def registrar_habitacion(numero, tipo, estado, precio, ventana, db):
         #
         #Debe retornar la habitación y darsela al gestorInterfaces. 
         #No debe hablar con la bd
-        db.insertar_habitacion(habit.numero, habit.tipo, habit.estado, habit.precio_por_noche)
+        #db.insertar_habitacion(habit.numero, habit.tipo, habit.estado, habit.precio_por_noche)
         messagebox.showinfo("Registro Exitoso", f"Habitación {numero} registrada con éxito.")
-        ventana.destroy()
+        #ventana.destroy()
+        ventana.withdraw()
+        return habit
     except ValueError:
         messagebox.showerror("Error", "Por favor ingrese datos válidos.")
 

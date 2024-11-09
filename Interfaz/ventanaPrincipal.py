@@ -1,16 +1,16 @@
 import tkinter as tk
 from tkinter import ttk
 from Datos.gestor_db import GestorDB
-#from Interfaz.gestorInterfaces import GestorInterfaces
+#from Interfaz.gestorInterfaces import *
 
 class HotelApp:
-    def __init__(self, root, gestor):
+    def __init__(self, root, gestorI):
         self.root = root
         self.root.title("Gestor Hotel")
         self.root.geometry("1280x720")
         self.root.config(bg="#2b3e50")  # Fondo azul oscuro
 
-        self.gestor = gestor
+        self.gestorI = gestorI
 
         # Título principal
         ttk.Label(root, text="Gestión del Hotel", font=("Helvetica", 18, "bold"), foreground="white", background="#2b3e50").pack(pady=(20, 20))
@@ -37,14 +37,14 @@ class HotelApp:
 
         # Botones en la ventana principal
         botones = [
-            ("Registrar Nueva Habitación", gestor.abrir_ventana_registrar_habitacion, self.iconos["habitacion"]),
-            ("Ver Habitaciones", gestor.abrir_ventana_ver_habitaciones, self.iconos["ver_habitaciones"]),
-            ("Registrar Nuevo Cliente", gestor.abrir_ventana_registrar_cliente, self.iconos["cliente"]),
-            ("Ver Clientes", gestor.abrir_ventana_ver_clientes, self.iconos["ver_clientes"]),
-            ("Registrar Reservas", gestor.abrir_ventana_registrar_reserva, self.iconos["reserva"]),
-            ("Registrar Empleado", gestor.abrir_ventana_registrar_empleado, self.iconos["empleado"]),
-            ("Ver Empleados", gestor.abrir_ventana_ver_empleados, self.iconos["ver_empleados"]),
-            ("Reportes", gestor.abrir_ventana_reportes, self.iconos["reportes"])
+            ("Registrar Nueva Habitación", gestorI.abrir_ventana_registrar_habitacion, self.iconos["habitacion"]),
+            ("Ver Habitaciones", gestorI.abrir_ventana_ver_habitaciones, self.iconos["ver_habitaciones"]),
+            ("Registrar Nuevo Cliente", gestorI.abrir_ventana_registrar_cliente, self.iconos["cliente"]),
+            ("Ver Clientes", gestorI.abrir_ventana_ver_clientes, self.iconos["ver_clientes"]),
+            ("Registrar Reservas", gestorI.abrir_ventana_registrar_reserva, self.iconos["reserva"]),
+            ("Registrar Empleado", gestorI.abrir_ventana_registrar_empleado, self.iconos["empleado"]),
+            ("Ver Empleados", gestorI.abrir_ventana_ver_empleados, self.iconos["ver_empleados"]),
+            ("Reportes", gestorI.abrir_ventana_reportes, self.iconos["reportes"])
         ]
 
         # Crear un frame para los botones
@@ -73,3 +73,6 @@ class HotelApp:
 
         boton = ttk.Button(frame, text=texto, command=comando, style="Card.TButton")
         boton.pack(side="top", fill="x", expand=True)
+
+    def mostrarPantalla(self):
+        self.root.mainloop()
