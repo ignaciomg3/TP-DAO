@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from Datos.gestor_db import GestorDB
-from Entidades.empleado import Empleado
+# from Interfaz.gestorInterfaces import GestorInterfaces
 
 
 def ventana_registrar_empleado(root, db):
@@ -35,11 +34,18 @@ def ventana_registrar_empleado(root, db):
     sueldo_entry = tk.Entry(ventana, **entry_style)
     sueldo_entry.pack(pady=(0, 10))
 
-    # Botón para registrar CLIENTE
+    def registrar_empleado():
+        datos = {
+            "id_empleado": id_empleado_entry.get(),
+            "nombre": nombre_entry.get(),
+            "apellido": apellido_entry.get(),
+            "cargo": cargo_entry.get(),
+            "sueldo": sueldo_entry.get()
+        }
+        GestorInterfaces().registrar_empleado(datos["id_empleado"], datos["nombre"], datos["apellido"], datos["cargo"], datos["sueldo"], ventana)
+
     tk.Button(
-        ventana, text="Registrar", command=lambda: registrar_empleado(
-            id_empleado_entry.get(), nombre_entry.get(), apellido_entry.get(), cargo_entry.get(), sueldo_entry.get(), ventana, db
-        ), font=("Helvetica", 12), bg="#0b8ad8", fg="white", bd=0, relief="flat", padx=10, pady=5
+        ventana, text="Registrar", command=registrar_empleado, font=("Helvetica", 12), bg="#0b8ad8", fg="white", bd=0, relief="flat", padx=10, pady=5
     ).pack(pady=20)
 
 def registrar_empleado(id_empleado, nombre, apellido, cargo, sueldo, ventana, db):

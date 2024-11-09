@@ -1,8 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-from tkinter import messagebox
-from Entidades.reserva import Reserva
 from tkcalendar import DateEntry
+# from Interfaz.gestorInterfaces import GestorInterfaces
 
 def ventana_registrar_reserva(root, db):
     ventana = tk.Toplevel(root)
@@ -39,8 +38,6 @@ def ventana_registrar_reserva(root, db):
     cliente_menu = ttk.OptionMenu(frame, cliente_var, *clientes_opciones.keys())
     cliente_menu.pack(fill="x", pady=5)
 
-    
-
     # Campo para seleccionar fecha de inicio con un calendario
     ttk.Label(frame, text="Fecha de Inicio:", font=("Helvetica", 10)).pack(anchor="w", pady=(5, 0))
     fecha_inicio_entry = DateEntry(frame, font=("Helvetica", 10), date_pattern='yyyy-mm-dd')
@@ -58,36 +55,19 @@ def ventana_registrar_reserva(root, db):
     cant_personas_entry = ttk.Entry(frame, font=("Helvetica", 10))
     cant_personas_entry.pack(fill="x", pady=5)
 
+    def registrar_reserva():
+        datos = {
+            "id_cliente": clientes_opciones[cliente_var.get()],
+            "id_habitacion": habitaciones_opciones[habitacion_var.get()],
+            "fecha_inicio": fecha_inicio_entry.get(),
+            "fecha_fin": fecha_fin_entry.get(),
+            "cant_personas": cant_personas_entry.get()
+        }
+        GestorInterfaces().registrar_reserva(datos["id_cliente"], datos["id_habitacion"], datos["fecha_inicio"], datos["fecha_fin"], datos["cant_personas"], ventana)
+
     # Botón para registrar la reserva
     ttk.Button(
         frame,
         text="Registrar",
-        command=lambda: registrar_reserva(
-            clientes_opciones[cliente_var.get()],
-            habitaciones_opciones[habitacion_var.get()],
-            fecha_inicio_entry.get(),
-            fecha_fin_entry.get(),
-            cant_personas_entry.get(),
-            ventana,
-            db
-        )
+        command=registrar_reserva
     ).pack(pady=10)
-
-
-def registrar_reserva(id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas, ventana, db):
-    try:
-        # Validar que ninguno de los parámetros sea nulo
-        if not all([id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas]):
-            raise ValueError("Todos los campos son obligatorios.")
-
-        # Guardar en la base de datos
-        db.insertar_reserva(1, id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas)
-        consulta = "UPDATE habitaciones SET estado = 'ocupado' WHERE numero = ?"
-        parametros = (id_habitacion, )
-        db.ejecutar_consulta(consulta, parametros)
-        messagebox.showinfo("Registro Exitoso", "Reserva registrada con éxito.")
-        ventana.destroy()
-    except ValueError as ve:
-        messagebox.showerror("Error", str(ve))
-    except Exception as e:
-        messagebox.showerror("Error", f"Ocurrió un error al registrar la reserva: {e}")

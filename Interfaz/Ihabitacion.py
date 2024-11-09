@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from tkinter import messagebox
-from Entidades.habitacion import Habitacion
+# from Interfaz.gestorInterfaces import GestorInterfaces
 
 def ventana_registrar_habitacion(root, db):
     ventana = tk.Toplevel(root)
@@ -41,7 +40,14 @@ def ventana_registrar_habitacion(root, db):
     precio_entry = ttk.Entry(frame, font=("Helvetica", 10))
     precio_entry.pack(fill="x", pady=5)
 
-    
+    def registrar_habitacion():
+        datos = {
+            "numero": numero_entry.get(),
+            "tipo": tipo_entry.get(),
+            "estado": estado_entry.get(),
+            "precio": precio_entry.get()
+        }
+        GestorInterfaces().registrar_habitacion(datos["numero"], datos["tipo"], datos["estado"], datos["precio"], ventana)
 
     # Botón para registrar habitación
     ttk.Button(ventana, text="Registrar", command=lambda: registrar_habitacion(
