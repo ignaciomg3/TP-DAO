@@ -13,6 +13,18 @@ from Entidades.empleado import Empleado
 from Entidades.cliente import Cliente
 from tkcalendar import DateEntry
 
+
+#Clase GestorInterfaces
+def usar_IHabitaciones():
+    habitaciones = HotelApp()
+    habitaciones.listar_habitaciones()
+    #crear gestroBD
+    
+    
+
+    # Aquí puedes llamar a los métodos de IHabitaciones
+    # Por ejemplo: habitaciones.algun_metodo()
+    
 class GestorInterfaces:
     def __init__(self, root):
         self.root = root
@@ -20,8 +32,12 @@ class GestorInterfaces:
         self.db.borrar_base_de_datos()
         self.db.crear_tablas()
 
-    def abrir_ventana_registrar_habitacion(self):
-        ventana_registrar_habitacion(self.root, self.db)
+    def RegistrarHabitacion(self, habitacion):
+        #1) Abrir la ventana
+        #2) Habitacion habitacion = ventana_registrar_habitacion(self.root, self.db)
+        #3) Validar X
+        #4) GestorBD.registrar_habitacion(habitacion)
+        pass
 
     def abrir_ventana_ver_habitaciones(self):
         ventana_ver_habitaciones(self.root, self.db)
