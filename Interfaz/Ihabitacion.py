@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from tkinter import messagebox
-from Entidades.habitacion import Habitacion
+# from Interfaz.gestorInterfaces import GestorInterfaces
 
 def ventana_registrar_habitacion(root, db):
     ventana = tk.Toplevel(root)
@@ -41,25 +40,13 @@ def ventana_registrar_habitacion(root, db):
     precio_entry = ttk.Entry(frame, font=("Helvetica", 10))
     precio_entry.pack(fill="x", pady=5)
 
-    
+    def registrar_habitacion():
+        datos = {
+            "numero": numero_entry.get(),
+            "tipo": tipo_entry.get(),
+            "estado": estado_entry.get(),
+            "precio": precio_entry.get()
+        }
+        GestorInterfaces().registrar_habitacion(datos["numero"], datos["tipo"], datos["estado"], datos["precio"], ventana)
 
-    # Botón para registrar habitación
-    ttk.Button(ventana, text="Registrar", command=lambda: registrar_habitacion(
-        numero_entry.get(), tipo_entry.get(), estado_entry.get(), precio_entry.get(), ventana, db
-    )).pack(pady=10)
-
-def registrar_habitacion(numero, tipo, estado, precio, ventana, db):
-    
-     # Verificar si algún campo está vacío
-    if not all([numero, tipo, estado, precio]):
-        messagebox.showwarning("Campos incompletos", "Por favor complete todos los campos antes de registrar.")
-        return  # Salir de la función si falta algún dato
-    try:
-        numero = int(numero)
-        precio = float(precio)
-        habit = Habitacion(numero, tipo, estado, precio)
-        db.insertar_habitacion(habit.numero, habit.tipo, habit.estado, habit.precio_por_noche)
-        messagebox.showinfo("Registro Exitoso", f"Habitación {numero} registrada con éxito.")
-        ventana.destroy()
-    except ValueError:
-        messagebox.showerror("Error", "Por favor ingrese datos válidos.")
+    ttk.Button(ventana, text="Registrar", command=registrar_habitacion).pack(pady=10)

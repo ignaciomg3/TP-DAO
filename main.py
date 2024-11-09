@@ -1,8 +1,9 @@
 import tkinter as tk
-from tkinter import ttk
+from Interfaz.gestorInterfaces import GestorInterfaces
 from Interfaz.ventanaPrincipal import HotelApp
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = HotelApp(root)
+    gestor = GestorInterfaces(root)
+    app = HotelApp(root, gestor)
     root.mainloop()

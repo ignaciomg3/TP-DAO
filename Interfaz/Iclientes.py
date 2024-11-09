@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from Datos.gestor_db import GestorDB
+# from Interfaz.gestorInterfaces import GestorInterfaces
 from Entidades.cliente import Cliente
 
 
@@ -47,36 +47,25 @@ def ventana_registrar_cliente(root, db):
     email_entry = ttk.Entry(frame, font=("Helvetica", 10))
     email_entry.pack(fill="x", pady=5)
 
+    def registrar_cliente():
+        datos = {
+            "id_cliente": id_cliente_entry.get(),
+            "nombre": nombre_entry.get(),
+            "apellido": apellido_entry.get(),
+            "direccion": direccion_entry.get(),
+            "telefono": telefono_entry.get(),
+            "email": email_entry.get()
+        }
+        GestorInterfaces().registrar_cliente(datos["id_cliente"], datos["nombre"], datos["apellido"], datos["direccion"], datos["telefono"], datos["email"], ventana)
+
     # Botón para registrar cliente
-    registrar_btn = ttk.Button(frame, text="Registrar", 
-                               command=lambda: registrar_cliente(
-        id_cliente_entry.get(),
-        nombre_entry.get(), 
-        apellido_entry.get(), 
-        direccion_entry.get(),
-        telefono_entry.get(),
-        email_entry.get(), 
-        ventana, 
-        db
-    ))
+    registrar_btn = ttk.Button(frame, text="Registrar", command=registrar_cliente)
     registrar_btn.pack(pady=10)
     
     # Aplicar estilo al botón
     registrar_btn.configure(style="TButton")
     estilo = ttk.Style()
     estilo.configure("TButton", font=("Helvetica", 10, "bold"), foreground="#AAAAAA", background="#4caf50")
-
-def registrar_cliente(id_cliente, nombre, apellido, direccion, telefono, email, ventana, db):
-    
-    if not all([id_cliente, nombre, apellido, direccion, telefono, email]):
-        messagebox.showwarning("Campos incompletos", "Por favor complete todos los campos antes de registrar.")
-        return  # Salir de la función si falta algún dato
-    try:
-        db.insertar_cliente(id_cliente, nombre, apellido, direccion, telefono, email)
-        messagebox.showinfo("Registro Exitoso", f"Cliente {nombre} {apellido} registrado con éxito.")
-        ventana.destroy()
-    except ValueError:
-        messagebox.showerror("Error", "Por favor ingrese datos válidos.")
 
 def ventana_ver_clientes(root, db):
     ventana = tk.Toplevel(root)
