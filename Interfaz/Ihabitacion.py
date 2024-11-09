@@ -54,12 +54,17 @@ def registrar_habitacion(numero, tipo, estado, precio, ventana, db):
     if not all([numero, tipo, estado, precio]):
         messagebox.showwarning("Campos incompletos", "Por favor complete todos los campos antes de registrar.")
         return  # Salir de la función si falta algún dato
+    
     try:
         numero = int(numero)
         precio = float(precio)
         habit = Habitacion(numero, tipo, estado, precio)
+        #
+        #Debe retornar la habitación y darsela al gestorInterfaces. 
+        #No debe hablar con la bd
         db.insertar_habitacion(habit.numero, habit.tipo, habit.estado, habit.precio_por_noche)
         messagebox.showinfo("Registro Exitoso", f"Habitación {numero} registrada con éxito.")
         ventana.destroy()
     except ValueError:
         messagebox.showerror("Error", "Por favor ingrese datos válidos.")
+
