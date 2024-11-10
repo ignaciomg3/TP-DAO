@@ -6,5 +6,5 @@ if __name__ == "__main__":
     root = tk.Tk()
     gestorBD = GestorDB()
     gestorI = GestorInterfaces(root, gestorBD)
-    print("Abriendo ventana principal por main")
+    print("Abriendo ventana principal por main") 
     gestorI.abrir_Ventana_Principal()

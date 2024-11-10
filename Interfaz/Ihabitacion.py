@@ -42,8 +42,8 @@ def ventana_registrar_habitacion(self, root):
     precio_entry.pack(fill="x", pady=5)
 
     # Botón para registrar habitación
-    ttk.Button(ventana, text="Registrar", command=lambda: registrar_habitacion(
-        numero_entry.get(), tipo_entry.get(), estado_entry.get(), precio_entry.get(), ventana, self
+    ttk.Button(ventana, text="Registrar", command=lambda: self.registrar_habitacion(
+        numero_entry.get(), tipo_entry.get(), estado_entry.get(), precio_entry.get(), ventana
     )).pack(pady=10)
 
 def registrar_habitacion(numero, tipo, estado, precio, ventana, gestorI):
