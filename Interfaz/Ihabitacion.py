@@ -41,21 +41,13 @@ def ventana_registrar_habitacion(self, root):
     precio_entry = ttk.Entry(frame, font=("Helvetica", 10))
     precio_entry.pack(fill="x", pady=5)
 
-    
-
     # Botón para registrar habitación
     ttk.Button(ventana, text="Registrar", command=lambda: registrar_habitacion(
-        numero_entry.get(), tipo_entry.get(), estado_entry.get(), precio_entry.get(), ventana 
+        numero_entry.get(), tipo_entry.get(), estado_entry.get(), precio_entry.get(), ventana, self
     )).pack(pady=10)
-    
-    
-    #guardar las variables en variables.
-    #variables = [numero_entry, tipo_entry, estado_entry, precio_entry]
-    #return variables
 
-def registrar_habitacion(numero, tipo, estado, precio, ventana, db):
-    
-     # Verificar si algún campo está vacío
+def registrar_habitacion(numero, tipo, estado, precio, ventana, gestorI):
+    # Verificar si algún campo está vacío
     if not all([numero, tipo, estado, precio]):
         messagebox.showwarning("Campos incompletos", "Por favor complete todos los campos antes de registrar.")
         return  # Salir de la función si falta algún dato
@@ -64,14 +56,10 @@ def registrar_habitacion(numero, tipo, estado, precio, ventana, db):
         numero = int(numero)
         precio = float(precio)
         habit = Habitacion(numero, tipo, estado, precio)
-        #
-        #Debe retornar la habitación y darsela al gestorInterfaces. 
-        #No debe hablar con la bd
-        #db.insertar_habitacion(habit.numero, habit.tipo, habit.estado, habit.precio_por_noche)
         messagebox.showinfo("Registro Exitoso", f"Habitación {numero} registrada con éxito.")
-        #ventana.destroy()
         ventana.withdraw()
         return habit
     except ValueError:
         messagebox.showerror("Error", "Por favor ingrese datos válidos.")
+        return None
 

@@ -39,30 +39,32 @@ from time import sleep
     
 class GestorInterfaces:
     def __init__(self, root, db_parametro):
-        self.root = root
+        self.root = root  # Aquí root es una instancia de tk.Tk
         self.db = db_parametro
         self.db.borrar_base_de_datos()
         self.db.crear_tablas()
-        
+        self.hotel_app = None  # Mantener una referencia a HotelApp
 
     def abrir_Ventana_Principal(self):
         print("Abriendo ventana principal por gestorInterfaces")
-        #1) Crear la ventana principal
-        self.root = HotelApp(self.root, self)
-        #2) Mostrar la ventana
-        self.root.mostrarPantalla()
+        # Crear la ventana principal
+        self.hotel_app = HotelApp(self.root, self)
+        # Mostrar la ventana
+        self.hotel_app.mostrarPantalla()
 
     def abrir_ventana_registrar_habitacion(self):
-         
-        #2) habitacion = ventana_registrar_habitacion(self.root, self.db)
         print("Abriendo ventana registrar habitacion")
         habit = ventana_registrar_habitacion(self, self.root)
-        #3) Validar algunas cosas (no se me ocurre nada )
-        #4) GestorBD.registrar_habitacion(habitacion)
-        self.db.insertar_habitacion(habit.numero, habit.tipo, habit.estado, habit.precio)
+        if habit:
+            self.db.insertar_habitacion(habit.numero, habit.tipo, habit.estado, habit.precio_por_noche)
+        else:
+            print("No se registró ninguna habitación.")
 
     def abrir_ventana_ver_habitaciones(self):
-        ventana_ver_habitaciones(self.root, self.db)
+        ventana_ver_habitaciones(self.root, self)
+
+    def filtrar_habitaciones(self, fecha_seleccionada):
+        return self.db.filtrar_habitaciones(fecha_seleccionada)
 
     def abrir_ventana_registrar_cliente(self):
         ventana_registrar_cliente(self.root, self.db)

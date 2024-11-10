@@ -378,6 +378,21 @@ class GestorDB:
             #self.desconectar()()
             return []
 
+    def filtrar_habitaciones(self, fecha_seleccionada):
+        consulta = """
+            SELECT h.numero, h.tipo, h.estado, h.precio_por_noche  
+            FROM habitaciones h 
+            LEFT JOIN reservas r ON h.numero = r.numero_habitacion 
+            WHERE h.estado = 'disponible' 
+            AND (
+                r.numero_habitacion IS NULL 
+                OR (r.fecha_salida < ? OR r.fecha_entrada > ?)
+            )
+        """
+        parametros = (fecha_seleccionada, fecha_seleccionada)
+        cursor = self.ejecutar_consulta(consulta, parametros)
+        return cursor.fetchall() if cursor else []
+
     #***************************** ACTUALIZAR DATOS ***********************
 
     #***************************** ELIMINAR DATOS ***********************

@@ -1,29 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
 from datetime import datetime
-#from tkcalendar import DateEntry
+from tkcalendar import DateEntry
 
-
-def ventana_ver_habitaciones(root, db):
+def ventana_ver_habitaciones(root, gestorI):
     def filtrar_habitaciones():
-        # Obtener la fecha seleccionada
-        fecha_seleccionada = date_entry.get_date()
+        fecha_seleccionada = date_entry.get_date().strftime('%Y-%m-%d')
+        habitaciones_disponibles = gestorI.filtrar_habitaciones(fecha_seleccionada)
         
-        # Consulta SQL para filtrar habitaciones disponibles en la fecha seleccionada
-        consulta = """
-            SELECT h.numero, h.tipo, h.estado, h.precio_por_noche  
-            FROM habitaciones h 
-            LEFT JOIN reservas r ON h.numero = r.numero_habitacion 
-            WHERE h.estado = 'disponible' 
-            AND (
-                r.numero_habitacion IS NULL 
-                OR (r.fecha_salida < ? OR r.fecha_entrada > ?)
-            )
-        """
-        parametros = (fecha_seleccionada, fecha_seleccionada)
-        habitaciones_disponibles = db.ejecutar_consulta(consulta, parametros)
-        
-        # Limpiar el Treeview y agregar los resultados de la consulta
         for item in tree.get_children():
             tree.delete(item)
         
@@ -44,9 +28,28 @@ def ventana_ver_habitaciones(root, db):
     filtro_frame = ttk.Frame(ventana)
     filtro_frame.pack(pady=10)
     
-    ttk.Label(filtro_frame, text="Ingrese una fecha (yyyy-mm-dd):").pack(side="left", padx=5)
-    #date_entry = DateEntry(filtro_frame, width=12, background='darkblue', foreground='white', borderwidth=2, date_pattern='yyyy-mm-dd')
-    date_entry = ttk.Entry(filtro_frame, width=12)
+    ttk.Label(filtro_frame, text="Ingrese una fecha:").pack(side="left", padx=5)
+    date_entry = DateEntry(
+        filtro_frame, 
+        width=12, 
+        background='black', 
+        foreground='white', 
+        borderwidth=2, 
+        date_pattern='dd/MM/yyyy',  # Mostrar fecha en formato d/m/y
+        showweeknumbers=False,  # Ocultar números de semana
+        selectbackground='blue', 
+        selectforeground='white', 
+        normalbackground='white', 
+        normalforeground='black', 
+        disabledbackground='black', 
+        disabledforeground='grey', 
+        weekendbackground='lightblue', 
+        weekendforeground='black', 
+        othermonthbackground='lightgrey', 
+        othermonthforeground='lightgrey', 
+        othermonthwebackground='lightgrey', 
+        othermonthweforeground='lightgrey'
+    )
     date_entry.pack(side="left", padx=5)
     
     # Botón para filtrar habitaciones

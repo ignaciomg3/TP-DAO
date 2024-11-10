@@ -37,14 +37,14 @@ class HotelApp:
 
         # Botones en la ventana principal
         botones = [
-            ("Registrar Nueva Habitación", gestorI.abrir_ventana_registrar_habitacion, self.iconos["habitacion"]),
-            ("Ver Habitaciones", gestorI.abrir_ventana_ver_habitaciones, self.iconos["ver_habitaciones"]),
-            ("Registrar Nuevo Cliente", gestorI.abrir_ventana_registrar_cliente, self.iconos["cliente"]),
-            ("Ver Clientes", gestorI.abrir_ventana_ver_clientes, self.iconos["ver_clientes"]),
-            ("Registrar Reservas", gestorI.abrir_ventana_registrar_reserva, self.iconos["reserva"]),
-            ("Registrar Empleado", gestorI.abrir_ventana_registrar_empleado, self.iconos["empleado"]),
-            ("Ver Empleados", gestorI.abrir_ventana_ver_empleados, self.iconos["ver_empleados"]),
-            ("Reportes", gestorI.abrir_ventana_reportes, self.iconos["reportes"])
+            ("Registrar Nueva Habitación", lambda: gestorI.abrir_ventana_registrar_habitacion(), self.iconos["habitacion"]),
+            ("Ver Habitaciones", lambda: gestorI.abrir_ventana_ver_habitaciones(), self.iconos["ver_habitaciones"]),
+            ("Registrar Nuevo Cliente", lambda: gestorI.abrir_ventana_registrar_cliente(), self.iconos["cliente"]),
+            ("Ver Clientes", lambda: gestorI.abrir_ventana_ver_clientes(), self.iconos["ver_clientes"]),
+            ("Registrar Reservas", lambda: gestorI.abrir_ventana_registrar_reserva(), self.iconos["reserva"]),
+            ("Registrar Empleado", lambda: gestorI.abrir_ventana_registrar_empleado(), self.iconos["empleado"]),
+            ("Ver Empleados", lambda: gestorI.abrir_ventana_ver_empleados(), self.iconos["ver_empleados"]),
+            ("Reportes", lambda: gestorI.abrir_ventana_reportes(), self.iconos["reportes"])
         ]
 
         # Crear un frame para los botones
