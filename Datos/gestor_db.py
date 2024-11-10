@@ -78,6 +78,12 @@ class GestorDB:
 #***************************** CREAR TABLAS ***********************
     def crear_tablas(self):
         self.conectar()
+        # Verificar si las tablas ya existen
+        self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='habitaciones';")
+        if self.cursor.fetchone():
+            print("Las tablas ya existen. No se volverán a crear ni cargar datos iniciales.")
+            return
+
         self._crear_tabla_habitaciones()
         self._crear_tabla_clientes()
         self._crear_tabla_empleados()
@@ -86,8 +92,7 @@ class GestorDB:
         # Llamar a otras funciones de creación de tablas aquí...
         
         self._insertar_datos_iniciales()
-        ##self.desconectar()()
-        print("Tablas creadas y datos iniciales insertados..función _crear_tablas().")
+        print("Tablas creadas y datos iniciales insertados.")
 
     def _crear_tabla_habitaciones(self):
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS habitaciones (
@@ -388,6 +393,14 @@ class GestorDB:
                 r.numero_habitacion IS NULL 
                 OR (r.fecha_salida < ? OR r.fecha_entrada > ?)
             )
+            ORDER BY 
+            CASE 
+                WHEN h.tipo = 'simple' THEN 1
+                WHEN h.tipo = 'doble' THEN 2
+                WHEN h.tipo = 'suite' THEN 3
+                ELSE 4
+            END, 
+            h.numero
         """
         parametros = (fecha_seleccionada, fecha_seleccionada)
         cursor = self.ejecutar_consulta(consulta, parametros)

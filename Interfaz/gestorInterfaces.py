@@ -41,7 +41,7 @@ class GestorInterfaces:
     def __init__(self, root, db_parametro):
         self.root = root  # Aquí root es una instancia de tk.Tk
         self.db = db_parametro
-        self.db.borrar_base_de_datos()
+        #self.db.borrar_base_de_datos() # No borramos mas los datos 
         self.db.crear_tablas()
         self.hotel_app = None  # Mantener una referencia a HotelApp
 
