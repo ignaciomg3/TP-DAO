@@ -3,7 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from Entidades.habitacion import Habitacion
 
-def ventana_registrar_habitacion(self, root):
+def ventana_registrar_habitacion(gestor, root):
     ventana = tk.Toplevel(root)
     ventana.title("Registrar Habitación")
     ventana.geometry("700x600")
@@ -24,7 +24,7 @@ def ventana_registrar_habitacion(self, root):
     ttk.Label(frame, text="Tipo de Habitación:", font=("Helvetica", 10)).pack(anchor="w", pady=(5, 0))
     tipo_entry = ttk.Combobox(frame, font=("Helvetica", 10), 
                               values=["simple", "doble", "suite"],
-                            state="readonly")
+                              state="readonly")
     tipo_entry.current(0)  # Seleccionar "simple" como valor predeterminado
     tipo_entry.pack(fill="x", pady=5)
 
@@ -41,25 +41,51 @@ def ventana_registrar_habitacion(self, root):
     precio_entry = ttk.Entry(frame, font=("Helvetica", 10))
     precio_entry.pack(fill="x", pady=5)
 
-    # Botón para registrar habitación
-    ttk.Button(ventana, text="Registrar", command=lambda: self.registrar_habitacion(
-        numero_entry.get(), tipo_entry.get(), estado_entry.get(), precio_entry.get(), ventana
-    )).pack(pady=10)
+    # Función para registrar la habitación
+    def confirmar_registro():
+        numero = numero_entry.get()
+        tipo = tipo_entry.get()
+        estado = estado_entry.get()
+        precio = precio_entry.get()
 
-def registrar_habitacion(numero, tipo, estado, precio, ventana):
+        habitacion = registrar_habitacion(numero, tipo, estado, precio)
+
+        if habitacion:  # Solo proceder si se creó el objeto exitosamente
+            try:
+                # Usamos el gestor para registrar la habitación
+                gestor.registrar_habitacion(habitacion.numero, habitacion.tipo, habitacion.estado, habitacion.precio_por_noche, ventana)
+            except AttributeError:
+                messagebox.showerror("Error", "El método registrar_habitacion no está definido en GestorInterfaces.")
+
+    ttk.Button(ventana, text="Registrar", command=confirmar_registro).pack(pady=10)
+
+def registrar_habitacion(numero, tipo, estado, precio):
     # Verificar si algún campo está vacío
     if not all([numero, tipo, estado, precio]):
         messagebox.showwarning("Campos incompletos", "Por favor complete todos los campos antes de registrar.")
-        return  # Salir de la función si falta algún dato
+        return None
     
+    # Validación del número de habitación
     try:
         numero = int(numero)
-        precio = float(precio)
-        habit = Habitacion(numero, tipo, estado, precio)
-        messagebox.showinfo("Registro Exitoso", f"Habitación {numero} registrada con éxito.")
-        ventana.withdraw()
-        return habit
+        if not (1 <= numero <= 100):
+            messagebox.showerror("Error", "Ingrese un número de habitación válido (1-100).")
+            return None
     except ValueError:
-        messagebox.showerror("Error", "Por favor ingrese datos válidos.")
+        messagebox.showerror("Error", "El número de habitación debe ser un número entero.")
         return None
 
+    # Validación del precio
+    try:
+        precio = float(precio)
+        if precio <= 0:
+            messagebox.showerror("Error", "El precio debe ser un número positivo.")
+            return None
+    except ValueError:
+        messagebox.showerror("Error", "El precio debe ser un número válido.")
+        return None
+
+    # Crear el objeto Habitacion solo si todas las validaciones son exitosas
+    habit = Habitacion(numero, tipo, estado, precio)
+    
+    return habit

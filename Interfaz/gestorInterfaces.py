@@ -2,8 +2,7 @@
 
 from Datos.gestor_db import GestorDB
 
-#Importar las clases de las INTERFACES
-
+# Importar las clases de las INTERFACES
 from Interfaz.Iclientes import *
 from Interfaz.Iempleados import *
 from Interfaz.Ihabitacion import *
@@ -12,14 +11,14 @@ from Interfaz.Ireportes import *
 from Interfaz.ventanaPrincipal import *
 from Interfaz.Imostrar_habitaciones import *
 
-#Importar clase de ENTIDADES
+# Importar clase de ENTIDADES
 from Entidades.habitacion import *
 from Entidades.cliente import *
 from Entidades.empleado import *
 from Entidades.reserva import *
 from Entidades.factura import *
 
-#Importar librerias necesarias
+# Importar librerías necesarias
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -29,69 +28,46 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 from time import sleep
 
-
-#Clase GestorInterfaces
-# def usar_IHabitaciones():
-#     habitaciones = HotelApp()
-#     habitaciones.listar_habitaciones()
-#     #crear gestroBD
-     
-    
+# Clase GestorInterfaces
 class GestorInterfaces:
     def __init__(self, root, db_parametro):
         self.root = root  # Aquí root es una instancia de tk.Tk
         self.db = db_parametro
-        #self.db.borrar_base_de_datos() # No borramos mas los datos 
-        self.db.crear_tablas()
+        self.db.crear_tablas()  # Crear tablas en la base de datos si no existen
         self.hotel_app = None  # Mantener una referencia a HotelApp
 
     def abrir_Ventana_Principal(self):
         print("Abriendo ventana principal por gestorInterfaces")
-        # Crear la ventana principal
         self.hotel_app = HotelApp(self.root, self)
-        # Mostrar la ventana
         self.hotel_app.mostrarPantalla()
 
     def abrir_ventana_registrar_habitacion(self):
         print("Abriendo ventana registrar habitacion")
-        habit = ventana_registrar_habitacion(self, self.root)
-        if habit:
+        habit = ventana_registrar_habitacion(self, self.root)  # Llamar a la interfaz de registro de habitación
+        if habit:  # Si la habitación fue creada correctamente, se registra en la base de datos
             self.db.insertar_habitacion(habit.numero, habit.tipo, habit.estado, habit.precio_por_noche)
+            messagebox.showinfo("Registro Exitoso", f"Habitación {habit.numero} registrada con éxito.")
         else:
             print("No se registró ninguna habitación.")
 
     def abrir_ventana_ver_habitaciones(self):
         ventana_ver_habitaciones(self.root, self)
-
+    
     def filtrar_habitaciones(self, fecha_seleccionada):
         return self.db.filtrar_habitaciones(fecha_seleccionada)
 
-    def abrir_ventana_registrar_cliente(self):
-        ventana_registrar_cliente(self.root, self.db)
-
-    def abrir_ventana_ver_clientes(self):
-        ventana_ver_clientes(self.root, self.db)
-
-    def abrir_ventana_registrar_reserva(self):
-        ventana_registrar_reserva(self.root, self.db)
-
-    def abrir_ventana_registrar_empleado(self):
-        ventana_registrar_empleado(self.root, self.db)
-
-    def abrir_ventana_ver_empleados(self):
-        ventana_ver_empleados(self.root, self.db)
-
-    def abrir_ventana_reportes(self):
-        ventana_reportes(self.root, self.db)
-
     def registrar_habitacion(self, numero, tipo, estado, precio, ventana):
+        # Validaciones previas
         if not all([numero, tipo, estado, precio]):
             messagebox.showwarning("Campos incompletos", "Por favor complete todos los campos antes de registrar.")
             return
         try:
+            # Creación del objeto Habitacion
             numero = int(numero)
             precio = float(precio)
             habit = Habitacion(numero, tipo, estado, precio)
+
+            # Registrar la habitación en la base de datos
             self.db.insertar_habitacion(habit.numero, habit.tipo, habit.estado, habit.precio_por_noche)
             messagebox.showinfo("Registro Exitoso", f"Habitación {numero} registrada con éxito.")
             ventana.destroy()
