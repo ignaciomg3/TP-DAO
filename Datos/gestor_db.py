@@ -2,11 +2,32 @@ import sqlite3
 import os
 
 DB_PATH = "Datos/BaseDatos.db"
+
 class GestorDB:
+    _instance = None  # Variable de clase para almacenar la única instancia de GestorDB
+
+    def __new__(cls, db_name=DB_PATH):
+        # Verifica si _instance es None, lo que significa que aún no se ha creado una instancia
+        if cls._instance is None:
+            # Si no hay una instancia, se crea una usando __new__ del padre (super)
+            cls._instance = super(GestorDB, cls).__new__(cls)
+            # Asigna el nombre de la base de datos a la instancia única
+            cls._instance.db_name = db_name
+            # Inicializa la variable de conexión como None para más adelante establecer la conexión a la BD
+            cls._instance.conn = None
+            print("Creando la única instancia de GestorDB (Singleton).")
+        # Devuelve la instancia única
+        return cls._instance
+    
     def __init__(self, db_name=DB_PATH):
-        self.db_name = db_name
-        self.conn = None
-        print("Constructor de GestorBD.")
+        # Este método está intencionalmente vacío. La inicialización en el Singleton se maneja en __new__.
+        # De esta forma, __init__ no sobreescribe la instancia existente.
+        pass
+        
+        # self.db_name = db_name
+        # self.conn = None
+        # print("Constructor de GestorBD.")
+
 
     def borrar_base_de_datos(self):
         if os.path.exists(DB_PATH):
@@ -231,24 +252,48 @@ class GestorDB:
             print("Cliente insertado correctamente.")
     
     def insertar_reserva(self, id_reserva, id_cliente, numero_habitacion, fecha_entrada, fecha_salida, cantidad_personas):
-        """Inserta una nueva reserva en la base de datos."""
+        """Inserta una nueva reserva en la base de datos como una transacción."""
         consulta = '''
             INSERT INTO reservas (id_reserva, id_cliente, numero_habitacion, fecha_entrada, fecha_salida, cantidad_personas)
             VALUES (?, ?, ?, ?, ?, ?)
         '''
-        resultado = self.ejecutar_consulta(consulta, (id_reserva, id_cliente, numero_habitacion, fecha_entrada, fecha_salida, cantidad_personas))
-        if resultado:
-            print("Reserva insertada correctamente.")
+        try:
+            self.conectar()
+            self.conn.execute('BEGIN TRANSACTION')
+            resultado = self.ejecutar_consulta(consulta, (id_reserva, id_cliente, numero_habitacion, fecha_entrada, fecha_salida, cantidad_personas))
+            if resultado:
+                self.conn.commit()
+                print("Reserva insertada correctamente.")
+            else:
+                self.conn.rollback()
+                print("Error al insertar la reserva. Transacción revertida.")
+        except sqlite3.Error as e:
+            self.conn.rollback()
+            print(f"Error al insertar la reserva: {e}. Transacción revertida.")
+        finally:
+            self.desconectar()
 
     def insertar_factura(self, id_factura, id_cliente, id_reserva, fecha_emision, total):
-        """Inserta una nueva factura en la base de datos."""
+        """Inserta una nueva factura en la base de datos como una transacción."""
         consulta = '''
             INSERT INTO facturas (id_factura, id_cliente, id_reserva, fecha_emision, total)
             VALUES (?, ?, ?, ?, ?)
         '''
-        resultado = self.ejecutar_consulta(consulta, (id_factura, id_cliente, id_reserva, fecha_emision, total))
-        if resultado:
-            print("Factura insertada correctamente.")
+        try:
+            self.conectar()
+            self.conn.execute('BEGIN TRANSACTION')
+            resultado = self.ejecutar_consulta(consulta, (id_factura, id_cliente, id_reserva, fecha_emision, total))
+            if resultado:
+                self.conn.commit()
+                print("Factura insertada correctamente.")
+            else:
+                self.conn.rollback()
+                print("Error al insertar la factura. Transacción revertida.")
+        except sqlite3.Error as e:
+            self.conn.rollback()
+            print(f"Error al insertar la factura: {e}. Transacción revertida.")
+        finally:
+            self.desconectar()
 
     def insertar_empleado(self, id_empleado, nombre, apellido, cargo, sueldo):
         """Inserta un nuevo empleado en la base de datos."""

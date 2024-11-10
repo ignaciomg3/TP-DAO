@@ -1,43 +1,65 @@
-from Interfaz.Ihabitacion import ventana_registrar_habitacion
-from Interfaz.Imostrar_habitaciones import ventana_ver_habitaciones
-from Interfaz.Iclientes import ventana_registrar_cliente, ventana_ver_clientes
-from Interfaz.Ireserva import ventana_registrar_reserva
-from Interfaz.Iempleados import ventana_registrar_empleado, ventana_ver_empleados
-from Interfaz.Ireportes import ventana_reportes
-from Interfaz.ventanaPrincipal import HotelApp
+#************************ IMPORTS ************************
+
 from Datos.gestor_db import GestorDB
+
+#Importar las clases de las INTERFACES
+
+from Interfaz.Iclientes import *
+from Interfaz.Iempleados import *
+from Interfaz.Ihabitacion import *
+from Interfaz.Ireserva import *
+from Interfaz.Ireportes import *
+from Interfaz.ventanaPrincipal import *
+from Interfaz.Imostrar_habitaciones import *
+
+#Importar clase de ENTIDADES
+from Entidades.habitacion import *
+from Entidades.cliente import *
+from Entidades.empleado import *
+from Entidades.reserva import *
+from Entidades.factura import *
+
+#Importar librerias necesarias
+import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox
-from Entidades.habitacion import Habitacion
-from Entidades.reserva import Reserva
-from Entidades.empleado import Empleado
-from Entidades.cliente import Cliente
 from tkcalendar import DateEntry
+
+import matplotlib.pyplot as plt
+from datetime import datetime
+from time import sleep
 
 
 #Clase GestorInterfaces
-def usar_IHabitaciones():
-    habitaciones = HotelApp()
-    habitaciones.listar_habitaciones()
-    #crear gestroBD
-    
-    
-
-    # Aquí puedes llamar a los métodos de IHabitaciones
-    # Por ejemplo: habitaciones.algun_metodo()
+# def usar_IHabitaciones():
+#     habitaciones = HotelApp()
+#     habitaciones.listar_habitaciones()
+#     #crear gestroBD
+     
     
 class GestorInterfaces:
-    def __init__(self, root):
+    def __init__(self, root, db_parametro):
         self.root = root
-        self.db = GestorDB()
+        self.db = db_parametro
         self.db.borrar_base_de_datos()
         self.db.crear_tablas()
+        
 
-    def RegistrarHabitacion(self, habitacion):
-        #1) Abrir la ventana
-        #2) Habitacion habitacion = ventana_registrar_habitacion(self.root, self.db)
-        #3) Validar X
+    def abrir_Ventana_Principal(self):
+        print("Abriendo ventana principal por gestorInterfaces")
+        #1) Crear la ventana principal
+        self.root = HotelApp(self.root, self)
+        #2) Mostrar la ventana
+        self.root.mostrarPantalla()
+
+    def abrir_ventana_registrar_habitacion(self):
+         
+        #2) habitacion = ventana_registrar_habitacion(self.root, self.db)
+        print("Abriendo ventana registrar habitacion")
+        habit = ventana_registrar_habitacion(self, self.root)
+        #3) Validar algunas cosas (no se me ocurre nada )
         #4) GestorBD.registrar_habitacion(habitacion)
-        pass
+        self.db.insertar_habitacion(habit.numero, habit.tipo, habit.estado, habit.precio)
 
     def abrir_ventana_ver_habitaciones(self):
         ventana_ver_habitaciones(self.root, self.db)
