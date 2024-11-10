@@ -406,6 +406,21 @@ class GestorDB:
         cursor = self.ejecutar_consulta(consulta, parametros)
         return cursor.fetchall() if cursor else []
 
+    def obtener_habitaciones_disponibles(self, fecha_inicio, fecha_fin):
+        consulta = """
+            SELECT h.numero, h.tipo
+            FROM habitaciones h
+            LEFT JOIN reservas r ON h.numero = r.numero_habitacion
+            WHERE h.estado = 'disponible'
+            AND (
+                r.numero_habitacion IS NULL
+                OR (r.fecha_salida < ? OR r.fecha_entrada > ?)
+            )
+        """
+        parametros = (fecha_inicio, fecha_fin)
+        cursor = self.ejecutar_consulta(consulta, parametros)
+        return {f"{habitacion[0]}-{habitacion[1]}": habitacion[0] for habitacion in cursor.fetchall()} if cursor else {}
+
     #***************************** ACTUALIZAR DATOS ***********************
 
     #***************************** ELIMINAR DATOS ***********************

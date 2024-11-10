@@ -46,7 +46,7 @@ def ventana_registrar_habitacion(self, root):
         numero_entry.get(), tipo_entry.get(), estado_entry.get(), precio_entry.get(), ventana
     )).pack(pady=10)
 
-def registrar_habitacion(numero, tipo, estado, precio, ventana, gestorI):
+def registrar_habitacion(numero, tipo, estado, precio, ventana):
     # Verificar si algún campo está vacío
     if not all([numero, tipo, estado, precio]):
         messagebox.showwarning("Campos incompletos", "Por favor complete todos los campos antes de registrar.")

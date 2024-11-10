@@ -134,3 +134,9 @@ class GestorInterfaces:
             ventana.destroy()
         except ValueError:
             messagebox.showerror("Error", "Por favor ingrese datos válidos.")
+
+    def buscar_habitaciones_disponibles(self, fecha_inicio, fecha_fin):
+        return self.db.obtener_habitaciones_disponibles(fecha_inicio, fecha_fin)
+
+    def obtener_clientes(self):
+        return self.db.obtener_clientes()
