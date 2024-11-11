@@ -401,10 +401,10 @@ class GestorDB:
 
     def filtrar_habitaciones(self, fecha_seleccionada):
         consulta = """
-            SELECT h.numero, h.tipo, h.estado, h.precio_por_noche  
+            SELECT h.numero, h.tipo, h.precio_por_noche  
             FROM habitaciones h 
             LEFT JOIN reservas r ON h.numero = r.numero_habitacion 
-            WHERE h.estado = 'disponible' 
+            WHERE 1 = 1
             AND (
                 r.numero_habitacion IS NULL 
                 OR (r.fecha_salida < ? OR r.fecha_entrada > ?)

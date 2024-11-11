@@ -37,6 +37,7 @@ def ventana_ver_habitaciones(root, gestorI):
         borderwidth=2, 
         date_pattern='dd/MM/yyyy',  # Mostrar fecha en formato d/m/y
         showweeknumbers=False,  # Ocultar números de semana
+        showothermonthdays=False,  # Ocultar días de otros meses
         selectbackground='blue', 
         selectforeground='white', 
         normalbackground='white', 
@@ -70,20 +71,20 @@ def ventana_ver_habitaciones(root, gestorI):
     estilo.map("Treeview", background=[("selected", "#b1dfe0")], foreground=[("selected", "black")])
 
     # Crear el widget Treeview
-    columnas = ("numero", "tipo", "estado", "precio")
+    columnas = ("numero", "tipo", "precio")
     tree = ttk.Treeview(frame, columns=columnas, show="headings", height=10)
     tree.pack(fill="both", expand=True)
 
     # Definir encabezados de columna
     tree.heading("numero", text="Número de Habitación")
     tree.heading("tipo", text="Tipo")
-    tree.heading("estado", text="Estado")
+    #tree.heading("estado", text="Estado")
     tree.heading("precio", text="Precio por Noche")
 
     # Ajustar el ancho de las columnas
     tree.column("numero", width=120, anchor="center")
     tree.column("tipo", width=100, anchor="center")
-    tree.column("estado", width=100, anchor="center")
+    #tree.column("estado", width=100, anchor="center")
     tree.column("precio", width=100, anchor="center")
 
     # Alternar el color de fondo de las filas
