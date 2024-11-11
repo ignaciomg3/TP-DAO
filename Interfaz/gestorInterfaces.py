@@ -10,6 +10,7 @@ from Interfaz.Ireserva import *
 from Interfaz.Ireportes import *
 from Interfaz.ventanaPrincipal import *
 from Interfaz.Imostrar_habitaciones import *
+from Interfaz.Iasignar_empleado import ventana_asignar_empleado  # Importar la nueva interfaz
 
 # Importar clase de ENTIDADES
 from Entidades.habitacion import *
@@ -73,6 +74,22 @@ class GestorInterfaces:
 
     def abrir_ventana_reportes(self):
         ventana_reportes(self.root, self.db)
+
+    def abrir_ventana_asignar_empleado(self):
+        empleados_limpieza = [Empleado(*e) for e in self.db.obtener_empleados_por_cargo("Servicio de limpieza")]
+        ventana_asignar_empleado(self.root, self, empleados_limpieza)
+
+    def registrar_servicio_limpieza(self, id_empleado, id_habitacion, fecha, ventana):
+        if not all([id_empleado, id_habitacion, fecha]):
+            messagebox.showwarning("Campos incompletos", "Por favor complete todos los campos antes de registrar.")
+            return
+        try:
+            self.db._crear_tabla_servicio_limpieza()  # Asegurarse de que la tabla exista
+            self.db.insertar_servicio_limpieza(id_empleado, id_habitacion, fecha)
+            messagebox.showinfo("Registro Exitoso", "Servicio de limpieza registrado con éxito.")
+            ventana.destroy()
+        except Exception as e:
+            messagebox.showerror("Error", f"Ocurrió un error al registrar el servicio de limpieza: {e}")
 
     def registrar_habitacion(self, numero, tipo, estado, precio, ventana):
         # Validaciones previas
