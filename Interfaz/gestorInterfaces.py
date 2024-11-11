@@ -56,6 +56,24 @@ class GestorInterfaces:
     def filtrar_habitaciones(self, fecha_seleccionada):
         return self.db.filtrar_habitaciones(fecha_seleccionada)
 
+    def abrir_ventana_registrar_cliente(self):
+        ventana_registrar_cliente(self.root, self.db)
+
+    def abrir_ventana_ver_clientes(self):
+        ventana_ver_clientes(self.root, self.db)
+
+    def abrir_ventana_registrar_reserva(self):
+        ventana_registrar_reserva(self.root, self)
+
+    def abrir_ventana_registrar_empleado(self):
+        ventana_registrar_empleado(self.root, self.db)
+
+    def abrir_ventana_ver_empleados(self):
+        ventana_ver_empleados(self.root, self.db)
+
+    def abrir_ventana_reportes(self):
+        ventana_reportes(self.root, self.db)
+
     def registrar_habitacion(self, numero, tipo, estado, precio, ventana):
         # Validaciones previas
         if not all([numero, tipo, estado, precio]):
@@ -89,7 +107,8 @@ class GestorInterfaces:
         try:
             if not all([id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas]):
                 raise ValueError("Todos los campos son obligatorios.")
-            self.db.insertar_reserva(1, id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas)
+            id_reserva = self.db.obtener_proximo_id_reserva()  # Obtener el próximo ID de reserva
+            self.db.insertar_reserva(id_reserva, id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas)
             consulta = "UPDATE habitaciones SET estado = 'ocupado' WHERE numero = ?"
             parametros = (id_habitacion, )
             self.db.ejecutar_consulta(consulta, parametros)

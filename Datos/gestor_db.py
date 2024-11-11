@@ -276,7 +276,8 @@ class GestorDB:
             self.conn.rollback()
             print(f"Error al insertar la reserva: {e}. Transacción revertida.")
         finally:
-            self.desconectar()
+            #self.desconectar()
+            pass
 
     def insertar_factura(self, id_factura, id_cliente, id_reserva, fecha_emision, total):
         """Inserta una nueva factura en la base de datos como una transacción."""
@@ -298,7 +299,8 @@ class GestorDB:
             self.conn.rollback()
             print(f"Error al insertar la factura: {e}. Transacción revertida.")
         finally:
-            self.desconectar()
+            #self.desconectar()
+            pass
 
     def insertar_empleado(self, id_empleado, nombre, apellido, cargo, sueldo):
         """Inserta un nuevo empleado en la base de datos."""
@@ -363,7 +365,7 @@ class GestorDB:
         cursor = self.ejecutar_consulta(consulta)
         if cursor:
             facturas = cursor.fetchall()
-            self.desconectar()
+            #self.desconectar()
             return facturas
         else:
             #self.desconectar()()
@@ -420,6 +422,13 @@ class GestorDB:
         parametros = (fecha_inicio, fecha_fin)
         cursor = self.ejecutar_consulta(consulta, parametros)
         return {f"{habitacion[0]}-{habitacion[1]}": habitacion[0] for habitacion in cursor.fetchall()} if cursor else {}
+
+    def obtener_proximo_id_reserva(self):
+        """Obtiene el próximo ID de reserva disponible."""
+        consulta = "SELECT MAX(id_reserva) FROM reservas"
+        cursor = self.ejecutar_consulta(consulta)
+        max_id = cursor.fetchone()[0]
+        return (max_id + 1) if max_id else 1
 
     #***************************** ACTUALIZAR DATOS ***********************
 

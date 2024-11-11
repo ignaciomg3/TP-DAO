@@ -41,7 +41,7 @@ def ventana_registrar_reserva(root, gestorI):
             tk.messagebox.showerror("Error", "La fecha de salida debe ser mayor a la fecha de entrada.")
             return
         global habitaciones_opciones
-        habitaciones_opciones = gestorI.obtener_habitaciones_disponibles(fecha_inicio, fecha_fin)
+        habitaciones_opciones = gestorI.buscar_habitaciones_disponibles(fecha_inicio, fecha_fin)
         habitacion_var.set(next(iter(habitaciones_opciones)))  # Establecer opción predeterminada
         habitacion_menu['menu'].delete(0, 'end')
         for habitacion in habitaciones_opciones:
