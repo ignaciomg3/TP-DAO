@@ -9,6 +9,7 @@ class HotelApp:
         self.root.title("Gestor Hotel")
         self.root.geometry("1280x720")
         self.root.config(bg="#2b3e50")  # Fondo azul oscuro
+        self.root.iconbitmap('icons/icono.ico')
 
         self.gestorI = gestorI
 
@@ -50,6 +51,11 @@ class HotelApp:
         # Crear un frame para los botones
         frame_botones = ttk.Frame(root, style="Card.TFrame")
         frame_botones.pack(fill="both", expand=True, padx=20, pady=20)
+        frame_botones.configure(style="Card.TFrame")  # Aplicar estilo
+
+        # Configurar el estilo para el fondo
+        estilo_frame = ttk.Style()
+        estilo_frame.configure("Card.TFrame", background="#97C4B8")
 
         # Configurar el grid para que sea responsive
         columnas = 3
@@ -67,6 +73,7 @@ class HotelApp:
     def crear_tarjeta(self, parent, texto, comando, icono, fila, columna):
         frame = ttk.Frame(parent, style="Card.TFrame", padding=(10, 10))
         frame.grid(row=fila, column=columna, padx=20, pady=20, sticky="nsew")
+        frame.configure(style="Card.TFrame")  # Aplicar estilo
 
         label_icono = ttk.Label(frame, image=icono, style="Card.TLabel")
         label_icono.pack(side="top", pady=(0, 10))

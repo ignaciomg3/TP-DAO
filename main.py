@@ -8,3 +8,4 @@ if __name__ == "__main__":
     gestorI = GestorInterfaces(root, gestorBD)
     print("Abriendo ventana principal por main") 
     gestorI.abrir_Ventana_Principal()
+    root.mainloop()
