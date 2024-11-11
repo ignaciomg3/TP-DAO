@@ -63,7 +63,7 @@ class GestorInterfaces:
         ventana_ver_clientes(self.root, self.db)
 
     def abrir_ventana_registrar_reserva(self):
-        ventana_registrar_reserva(self.root, self)
+        res = ventana_registrar_reserva(self.root, self)
 
     def abrir_ventana_registrar_empleado(self):
         ventana_registrar_empleado(self.root, self.db)
@@ -108,11 +108,18 @@ class GestorInterfaces:
             if not all([id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas]):
                 raise ValueError("Todos los campos son obligatorios.")
             id_reserva = self.db.obtener_proximo_id_reserva()  # Obtener el próximo ID de reserva
+            messagebox.showinfo("id de la última reserva:",id_reserva)
+            #mostrar el tipo de dato de 
+            print(type(id_reserva))
+            id_reserva = int(id_reserva)
             self.db.insertar_reserva(id_reserva, id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas)
             consulta = "UPDATE habitaciones SET estado = 'ocupado' WHERE numero = ?"
-            parametros = (id_habitacion, )
+            parametros = (id_habitacion,)
             self.db.ejecutar_consulta(consulta, parametros)
             messagebox.showinfo("Registro Exitoso", "Reserva registrada con éxito.")
+            # mostrar la reserva, la habitación 
+            reserva = self.db.obtener_reserva(id_reserva)
+            messagebox.showinfo("Reserva Registrada", f"Reserva ID: {reserva.id_reserva}\nCliente ID: {reserva.id_cliente}\nHabitación ID: {reserva.id_habitacion}\nFecha Inicio: {reserva.fecha_inicio}\nFecha Fin: {reserva.fecha_fin}\nCantidad de Personas: {reserva.cant_personas}")
             ventana.destroy()
         except ValueError as ve:
             messagebox.showerror("Error", str(ve))

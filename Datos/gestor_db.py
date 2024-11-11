@@ -312,7 +312,7 @@ class GestorDB:
         print("Empleado insertado correctamente.")
         
     
-    #***************************** CONSULTAS ***********************
+    #***************************** CONSULTAS (Obtener todas y también por ID) ***********************
     def obtener_habitaciones(self):
         """Obtiene todas las habitaciones de la base de datos."""
         self.conectar()
@@ -356,6 +356,20 @@ class GestorDB:
         else:
             #self.desconectar()
             return []
+
+    def obtener_reserva(self, id_reserva):
+        """Obtiene una reserva específica por su ID."""
+        self.conectar()
+        consulta = 'SELECT * FROM reservas WHERE id_reserva = ?'
+        cursor = self.ejecutar_consulta(consulta, (id_reserva,))
+        if cursor:
+            reserva = cursor.fetchone()
+            #self.desconectar()
+            return reserva
+        else:
+            print("No se pudo obtener la reserva.")
+            #self.desconectar()
+            return None
         
     def obtener_facturas(self):
         
