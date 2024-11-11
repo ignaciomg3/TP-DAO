@@ -17,8 +17,18 @@ def ventana_registrar_habitacion(gestor, root):
 
     # Campos de entrada estilizados
     ttk.Label(frame, text="Número de Habitación:", font=("Helvetica", 10)).pack(anchor="w", pady=(5, 0))
-    numero_entry = ttk.Entry(frame, font=("Helvetica", 10))
+    
+    # Validación para que solo se puedan ingresar números
+    def solo_numeros(char):
+        return char.isdigit()
+
+    # Validación para que solo se puedan ingresar números y un punto decimal
+    def solo_numeros_y_punto(char):
+        return char.isdigit() or char == '.'
+
+    numero_entry = ttk.Entry(frame, font=("Helvetica", 10), validate="key")
     numero_entry.pack(fill="x", pady=5)
+    numero_entry['validatecommand'] = (numero_entry.register(solo_numeros), '%S')
 
     # Combobox para tipo de habitación
     ttk.Label(frame, text="Tipo de Habitación:", font=("Helvetica", 10)).pack(anchor="w", pady=(5, 0))
@@ -38,8 +48,9 @@ def ventana_registrar_habitacion(gestor, root):
 
     # Campo de precio
     ttk.Label(frame, text="Precio por Noche:", font=("Helvetica", 10)).pack(anchor="w", pady=(5, 0))
-    precio_entry = ttk.Entry(frame, font=("Helvetica", 10))
+    precio_entry = ttk.Entry(frame, font=("Helvetica", 10), validate="key")
     precio_entry.pack(fill="x", pady=5)
+    precio_entry['validatecommand'] = (precio_entry.register(solo_numeros_y_punto), '%S')
 
     # Función para registrar la habitación
     def confirmar_registro():

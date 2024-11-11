@@ -11,6 +11,9 @@ class HotelApp:
         self.root.config(bg="#2b3e50")  # Fondo azul oscuro
         self.root.iconbitmap('icons/icono.ico')
 
+        # Center the window on the screen
+        self.center_window(1280, 720)
+
         self.gestorI = gestorI
 
         # Título principal
@@ -80,6 +83,13 @@ class HotelApp:
 
         boton = ttk.Button(frame, text=texto, command=comando, style="Card.TButton")
         boton.pack(side="top", fill="x", expand=True)
+
+    def center_window(self, width, height):
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+        x = (screen_width // 2) - (width // 2)
+        y = (screen_height // 2) - (height // 2)
+        self.root.geometry(f'{width}x{height}+{x}+{y}')
 
     def mostrarPantalla(self):
         self.root.mainloop()
