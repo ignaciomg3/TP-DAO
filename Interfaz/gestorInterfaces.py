@@ -113,7 +113,7 @@ class GestorInterfaces:
             print(type(id_reserva))
             id_reserva = int(id_reserva)
             self.db.insertar_reserva(id_reserva, id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas)
-            consulta = "UPDATE habitaciones SET estado = 'ocupado' WHERE numero = ?"
+            consulta = "UPDATE habitaciones SET estado = 'ocupada' WHERE numero = ?"
             parametros = (id_habitacion,)
             self.db.ejecutar_consulta(consulta, parametros)
             messagebox.showinfo("Registro Exitoso", "Reserva registrada con éxito.")
