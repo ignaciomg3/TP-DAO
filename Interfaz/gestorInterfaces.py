@@ -3,6 +3,7 @@
 from Datos.gestor_db import GestorDB
 
 # Importar las clases de las INTERFACES
+from Interfaz import Ireportes
 from Interfaz.Iclientes import *
 from Interfaz.Iempleados import *
 from Interfaz.Ihabitacion import *
@@ -30,11 +31,12 @@ from time import sleep
 
 # Clase GestorInterfaces
 class GestorInterfaces:
-    def __init__(self, root, db_parametro):
+    def __init__(self, root, db_parametro, gestor_reportes):
         self.root = root  # Aquí root es una instancia de tk.Tk
         self.db = db_parametro
         self.db.crear_tablas()  # Crear tablas en la base de datos si no existen
         self.hotel_app = None  # Mantener una referencia a HotelApp
+        self.gestor_reportes = gestor_reportes
 
     def abrir_Ventana_Principal(self):
         print("Abriendo ventana principal por gestorInterfaces")
@@ -63,7 +65,7 @@ class GestorInterfaces:
         ventana_ver_clientes(self.root, self.db)
 
     def abrir_ventana_registrar_reserva(self):
-        res = ventana_registrar_reserva(self.root, self)
+        ventana_registrar_reserva(self.root, self)
 
     def abrir_ventana_registrar_empleado(self):
         ventana_registrar_empleado(self.root, self.db)
@@ -72,7 +74,7 @@ class GestorInterfaces:
         ventana_ver_empleados(self.root, self.db)
 
     def abrir_ventana_reportes(self):
-        ventana_reportes(self.root, self.db)
+        Ireportes.ventana_reportes(self.root, self.db)
 
     def registrar_habitacion(self, numero, tipo, estado, precio, ventana):
         # Validaciones previas

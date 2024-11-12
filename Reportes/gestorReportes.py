@@ -7,6 +7,7 @@ from Reportes.graficos import graficar_ocupacion_promedio, graficar_ingresos_men
 class GestorReportes:
     def __init__(self,gestor_db = None):
         self.reportes = []
+        self.gestor_db = gestor_db
 
     def generar_reporte_reservas(self, fecha_inicio, fecha_fin):
         """Genera un reporte de todas las reservas en un periodo de tiempo."""

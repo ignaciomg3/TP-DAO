@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from Reportes.gestorReportes import GestorReportes
+from tkcalendar import DateEntry
 
 def ventana_reportes(root, db):
     ventana = tk.Toplevel(root)
@@ -8,30 +9,37 @@ def ventana_reportes(root, db):
     ventana.geometry("700x600")
 
     gestor_reportes = GestorReportes(db)
-
+ 
     fecha_inicio = "2024-03-01"  # Podrías hacer que estas fechas sean dinámicas con inputs
     fecha_fin = "2024-03-31"
 
     # Botón para Reporte 1 - Reservas
     boton_reporte1 = ttk.Button(ventana, text="Reporte de Reservas", 
-                                command=lambda: mostrar_reporte_tabla2("Reservas", gestor_reportes.generar_reporte_reservas(fecha_inicio, fecha_fin)))
+                                command=lambda: mostrar_reporte_reservas("Reservas", 
+                                                                       gestor_reportes.generar_reporte_reservas(fecha_inicio, fecha_fin)))
     boton_reporte1.pack(pady=10)
 
     # Botón para Reporte 2 - Ingresos
     boton_reporte2 = ttk.Button(ventana, text="Reporte de Ingresos", 
-                                command=lambda: mostrar_reporte("Ingresos", gestor_reportes.generar_reporte_ingresos()))
+                                command=lambda: mostrar_reporte("Ingresos", 
+                                                                gestor_reportes.generar_reporte_ingresos()))
     boton_reporte2.pack(pady=10)
 
     # Botón para Reporte 3 - Ocupación
     boton_reporte3 = ttk.Button(ventana, text="Reporte de Ocupación", 
-                                command=lambda: mostrar_reporte("Ocupación", gestor_reportes.generar_reporte_ocupacion()))
+                                command=lambda: mostrar_reporte("Ocupación", 
+                                                                gestor_reportes.generar_reporte_ocupacion()))
     boton_reporte3.pack(pady=10)
 
     # Opcional: botones de gráficos con el mismo estilo
-    boton_graficar_ingresos = ttk.Button(ventana, text="Graficar Ingresos Mensuales", command=gestor_reportes.graficar_ingresos_mensuales, style="TButton")
+    boton_graficar_ingresos = ttk.Button(ventana, text="Graficar Ingresos Mensuales",
+                                          command=gestor_reportes.graficar_ingresos_mensuales, 
+                                          style="TButton")
     boton_graficar_ingresos.pack(pady=10, padx=20, fill="x")
 
-    boton_graficar_ocupacion = ttk.Button(ventana, text="Graficar Ocupación Promedio", command=gestor_reportes.graficar_ocupacion_promedio, style="TButton")
+    boton_graficar_ocupacion = ttk.Button(ventana, text="Graficar Ocupación Promedio",
+                                           command=gestor_reportes.graficar_ocupacion_promedio,
+                                             style="TButton")
     boton_graficar_ocupacion.pack(pady=10, padx=20, fill="x")
 
 def mostrar_reporte(titulo, datos):
@@ -84,12 +92,31 @@ def mostrar_reporte_tabla(titulo, datos):
     tree.configure(xscroll=scrollbar_x.set)
     scrollbar_x.pack(side="bottom", fill="x")
 
-def mostrar_reporte_tabla2(titulo, datos):
+def mostrar_reporte_reservas(titulo, datos):
     # Crear una nueva ventana para el reporte en formato tabla
     ventana_tabla = tk.Toplevel()
     ventana_tabla.title(f"Reporte de {titulo}")
     ventana_tabla.geometry("800x400")
+ 
+    # Labels y DateEntry para seleccionar el rango de fechas
+    label_fecha_desde = ttk.Label(ventana_tabla, text="Fecha desde:")
+    label_fecha_desde.pack(pady=5)
+    date_entry_desde = ttk.DateEntry(ventana_tabla)
+    date_entry_desde.pack(pady=5)
 
+    label_fecha_hasta = ttk.Label(ventana_tabla, text="Fecha hasta:")
+    label_fecha_hasta.pack(pady=5)
+    date_entry_hasta = ttk.DateEntry(ventana_tabla)
+    date_entry_hasta.pack(pady=5)
+
+    # Botón para filtrar las reservas por rango de fechas
+    boton_filtrar = ttk.Button(ventana_tabla, text="Filtrar", 
+                               command=lambda: filtrar_reservas_por_fecha(date_entry_desde.get_date(), 
+                                                                         date_entry_hasta.get_date()))  
+    boton_filtrar.pack(pady=5)
+
+    
+    
     # Crear el Treeview para mostrar los datos en formato tabla
     tree = ttk.Treeview(ventana_tabla, show="headings")
     tree.pack(fill="both", expand=True)
@@ -110,7 +137,7 @@ def mostrar_reporte_tabla2(titulo, datos):
 
     # Alternar colores de fondo en filas
     estilo = ttk.Style()
-    estilo.configure("Treeview", rowheight=25)
+    estilo.configure("Treeview", rowheight=25)  
     estilo.map("Treeview", background=[("selected", "#b1dfe0")], foreground=[("selected", "black")])
     tree.tag_configure("oddrow", background="#f2f2f2")
     tree.tag_configure("evenrow", background="#ffffff")
@@ -131,3 +158,16 @@ def mostrar_reporte_tabla2(titulo, datos):
     scrollbar_x = ttk.Scrollbar(ventana_tabla, orient="horizontal", command=tree.xview)
     tree.configure(xscroll=scrollbar_x.set)
     scrollbar_x.pack(side="bottom", fill="x")
+
+    def filtrar_reservas_por_fecha(fecha_desde, fecha_hasta):
+        # Filtrar las reservas por fecha
+        reservas_filtradas = [reserva for reserva in datos if fecha_desde <= reserva.fecha_entrada <= fecha_hasta]
+        # Limpiar la tabla antes de agregar los datos filtrados
+        for item in tree.get_children():
+            tree.delete(item)
+
+        # Agregar las reservas filtradas a la tabla
+        for i, reserva in enumerate(reservas_filtradas):
+            fila = [getattr(reserva, attr) for attr in columnas]
+            tag = "evenrow" if i % 2 == 0 else "oddrow"
+            tree.insert("", "end", values=fila, tags=(tag,))
