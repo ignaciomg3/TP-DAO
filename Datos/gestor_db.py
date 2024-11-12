@@ -412,7 +412,18 @@ class GestorDB:
             print("No se pudo obtener la habitación.")
             #self.desconectar()
             return None
-        
+    
+    def verificar_disponibilidad_habitacion(self, numero_habitacion, fecha_entrada, fecha_salida):
+        """Verifica si una habitación está disponible en las fechas seleccionadas."""
+        consulta = """
+            SELECT * FROM reservas 
+            WHERE numero_habitacion = ? 
+            AND (fecha_salida >= ? AND fecha_entrada <= ?)
+        """
+        parametros = (numero_habitacion, fecha_entrada, fecha_salida)
+        cursor = self.ejecutar_consulta(consulta, parametros)
+        return cursor.fetchone() is None
+    
     def obtener_clientes(self):
         """Obtiene todos los clientes de la base de datos."""
         self.conectar()

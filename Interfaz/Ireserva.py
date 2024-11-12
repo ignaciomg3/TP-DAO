@@ -13,7 +13,7 @@ def ventana_registrar_reserva(root, gestorI):
     ventana = tk.Toplevel(root)
     ventana.title("Registrar Reserva")
     set_window_icon(ventana)
-
+    gestorI = gestorI
     # Estilo de la ventana
     ventana.minsize(400, 400)
     ventana.geometry("500x450")
@@ -66,7 +66,7 @@ def ventana_registrar_reserva(root, gestorI):
         for habitacion in habitaciones_opciones:
             habitacion_menu['menu'].add_command(label=habitacion, command=tk._setit(habitacion_var, habitacion))
         
-        # Mostrar campos ocultos
+        # MOSTRAR CAMPOS OCULTOS
         habitacion_label.grid()
         habitacion_menu.grid()
         cliente_label.grid()
@@ -123,6 +123,7 @@ def ventana_registrar_reserva(root, gestorI):
         }
         print("Datos de la reserva:")
         print(f"ID Cliente: {datos['id_cliente']}")
+        print(type(datos['id_cliente']))
         print(f"ID Habitación: {datos['id_habitacion']}")
         print(f"Fecha de Inicio: {datos['fecha_inicio']}")
         print(f"Fecha de Fin:       {datos['fecha_fin']}")
@@ -134,10 +135,6 @@ def ventana_registrar_reserva(root, gestorI):
                                          datos["cant_personas"], ventana)
 
     # Botón para registrar la reserva
-    registrar_button = ttk.Button(
-        frame,
-        text="Registrar",
-        command=registrar_reserva
-    )
+    registrar_button = ttk.Button(frame, text="Registrar",  command = registrar_reserva)
     registrar_button.grid(row=5, column=0, columnspan=4, pady=10)
     registrar_button.grid_remove()

@@ -4,7 +4,7 @@ from Datos.gestor_db import GestorDB
 
 # Importar las clases de las INTERFACES
 from Interfaz import Ireportes
-from Interfaz.Iclientes import *
+from Interfaz.Iclientes import ventana_registrar_cliente, ventana_ver_clientes
 from Interfaz.Iempleados import *
 from Interfaz.Ihabitacion import *
 from Interfaz.Ireserva import *
@@ -71,8 +71,68 @@ class GestorInterfaces:
         ventana_ver_clientes(self.root, self.db)
 
     #***************** RESERVAS *****************
+    def registrar_reserva(self, id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas, ventana):
+        try:
+            if not all([id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas]):
+                raise ValueError("Todos los campos son obligatorios.")
+            id_reserva = self.db.obtener_proximo_id_reserva()  # Obtener el próximo ID de reserva
+            print(f"tipo de dato del atributo id_reserva: {type(id_reserva)},\n"
+                f"tipo de dato del atributo id_cliente: {type(id_cliente)},\n"
+                f"tipo de dato del atributo id_habitacion: {type(id_habitacion)},\n"
+                f"tipo de dato del atributo fecha_inicio: {type(fecha_inicio)},\n"
+                f"tipo de dato del atributo fecha_fin: {type(fecha_fin)},\n"
+                f"tipo de dato del atributo cant_personas: {type(cant_personas)}")
+            messagebox.showinfo("id de la última reserva:",id_reserva)
+            #mostrar el tipo de dato del id_reserva
+            print(type(id_reserva))
+            id_reserva = int(id_reserva)
+            self.db.insertar_reserva(id_reserva, id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas)
+            consulta = "UPDATE habitaciones SET estado = 'ocupada' WHERE numero = ?"
+            parametros = (id_habitacion,)
+            self.db.ejecutar_consulta(consulta, parametros)
+            messagebox.showinfo("Registro Exitoso", "Reserva registrada con éxito.")
+            # mostrar la reserva, la habitación 
+            reserva = self.db.obtener_reserva(id_reserva)
+            messagebox.showinfo("Reserva Registrada", f"Reserva ID: {reserva[0]}\nCliente ID: {reserva[1]}\nHabitación ID: {reserva[2]}\nFecha Inicio: {reserva[3]}\nFecha Fin: {reserva[4]}\nCantidad de Personas: {reserva[5]}")
+           
+            # Generar factura de la reserva
+            # Obtener los detalles de la habitación a partir de su ID
+            habitacion = self.db.obtener_habitacion(id_habitacion)
+            # Extraer el precio por noche de la habitación
+            precio_por_noche = habitacion[3]
+            
+            # Convertir las fechas de inicio y fin de string a objeto datetime si es necesario
+            if isinstance(fecha_inicio, str) and fecha_inicio:
+                fecha_inicio = datetime.strptime(fecha_inicio, "%Y-%m-%d")
+            if isinstance(fecha_fin, str) and fecha_fin:
+                fecha_fin = datetime.strptime(fecha_fin, "%Y-%m-%d")
+                
+            # Calcular el número de días de la reserva
+            if fecha_inicio and fecha_fin:
+                dias = (fecha_fin - fecha_inicio).days
+            else:
+                dias = 0
+            total_reserva = precio_por_noche * dias
+            
+            proximo_id_factura = self.db.obtener_proximo_id_factura()
+
+            #LLamar a una función que se encargue de generar la factura
+            self.db.insertar_factura(proximo_id_factura, id_cliente, id_reserva, fecha_fin, total_reserva )
+            print("Factura generada con éxito")
+
+            #self.db.insertar_factura_autoincremental(id_cliente, id_reserva, fecha_fin, total_reserva)
+            #print("Factura autoincremental generada con éxito")
+            
+            ventana.destroy()
+        except ValueError as ve:
+            messagebox.showerror("Error", str(ve))
+        except Exception as e:
+            messagebox.showerror("Error", f"Ocurrió un error al registrar la reserva: {e}")
+    
     def abrir_ventana_registrar_reserva(self):
         ventana_registrar_reserva(self.root, self)
+
+    
 
     #***************** EMPLEADOS *****************
     def abrir_ventana_registrar_empleado(self):
@@ -132,45 +192,7 @@ class GestorInterfaces:
         except ValueError:
             messagebox.showerror("Error", "Por favor ingrese datos válidos.")
 
-    def registrar_reserva(self, id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas, ventana):
-        try:
-            if not all([id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas]):
-                raise ValueError("Todos los campos son obligatorios.")
-            id_reserva = self.db.obtener_proximo_id_reserva()  # Obtener el próximo ID de reserva
-            messagebox.showinfo("id de la última reserva:",id_reserva)
-            #mostrar el tipo de dato del id_reserva
-            print(type(id_reserva))
-            id_reserva = int(id_reserva)
-            self.db.insertar_reserva(id_reserva, id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas)
-            consulta = "UPDATE habitaciones SET estado = 'ocupada' WHERE numero = ?"
-            parametros = (id_habitacion,)
-            self.db.ejecutar_consulta(consulta, parametros)
-            messagebox.showinfo("Registro Exitoso", "Reserva registrada con éxito.")
-            # mostrar la reserva, la habitación 
-            reserva = self.db.obtener_reserva(id_reserva)
-            messagebox.showinfo("Reserva Registrada", f"Reserva ID: {reserva.id_reserva}\nCliente ID: {reserva.id_cliente}\nHabitación ID: {reserva.id_habitacion}\nFecha Inicio: {reserva.fecha_inicio}\nFecha Fin: {reserva.fecha_fin}\nCantidad de Personas: {reserva.cant_personas}")
-
-            # Generar factura de la reserva
-            habitacion = self.db.obtener_habitacion(id_habitacion)
-            precio_por_noche = habitacion.precio_por_noche
-            dias = (fecha_fin - fecha_inicio).days
-            total_reserva = precio_por_noche * dias
-            
-            proximo_id_factura = self.db.obtener_proximo_id_factura()
-
-            #LLamar a una función que se encargue de generar la factura
-            self.db.insertar_factura(proximo_id_factura, id_cliente, id_reserva, fecha_fin, total_reserva )
-            print("Factura generada con éxito")
-
-            self.db.insertar_factura_autoincremental(self, id_cliente, id_reserva, fecha_fin, total_reserva)
-            print("Factura autoincremental generada con éxito")
-            
-            ventana.destroy()
-        except ValueError as ve:
-            messagebox.showerror("Error", str(ve))
-        except Exception as e:
-            messagebox.showerror("Error", f"Ocurrió un error al registrar la reserva: {e}")
-
+    
     def registrar_empleado(self, nombre, apellido, cargo, sueldo, ventana):
         if not nombre or not apellido or not cargo or not sueldo:
             messagebox.showerror("Error", "Todos los campos son obligatorios.")
