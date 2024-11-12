@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from Interfaz.gestorInterfaces import GestorInterfaces
+from Interfaz.gestorInterfaces import *
 from Entidades.cliente import Cliente
 
 
@@ -19,9 +19,9 @@ def ventana_registrar_cliente(root, db, gestor_interfaces):
     ttk.Label(frame, text="Registrar Cliente", font=("Helvetica", 14, "bold")).pack(pady=(0, 10))
 
     # ID de Cliente
-    ttk.Label(frame, text="ID de Cliente:", font=("Helvetica", 10)).pack(anchor="w", pady=(5, 0))
-    id_cliente_entry = ttk.Entry(frame, font=("Helvetica", 10))
-    id_cliente_entry.pack(fill="x", pady=5)
+    #ttk.Label(frame, text="ID de Cliente:", font=("Helvetica", 10)).pack(anchor="w", pady=(5, 0))
+    #id_cliente_entry = ttk.Entry(frame, font=("Helvetica", 10))
+    #id_cliente_entry.pack(fill="x", pady=5)
 
     # Nombre
     ttk.Label(frame, text="Nombre:", font=("Helvetica", 10)).pack(anchor="w", pady=(5, 0))
@@ -50,14 +50,14 @@ def ventana_registrar_cliente(root, db, gestor_interfaces):
 
     def registrar_cliente():
         datos = {
-            "id_cliente": id_cliente_entry.get(),
+            #"id_cliente": id_cliente_entry.get(),
             "nombre": nombre_entry.get(),
             "apellido": apellido_entry.get(),
             "direccion": direccion_entry.get(),
             "telefono": telefono_entry.get(),
             "email": email_entry.get()
         }
-        gestor_interfaces().registrar_cliente(datos["id_cliente"], datos["nombre"], datos["apellido"], datos["direccion"], datos["telefono"], datos["email"], ventana)
+        gestor_interfaces.registrar_cliente(datos["nombre"], datos["apellido"], datos["direccion"], datos["telefono"], datos["email"], ventana)
 
     # Botón para registrar cliente
     registrar_btn = ttk.Button(frame, text="Registrar", command=registrar_cliente)
