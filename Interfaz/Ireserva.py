@@ -15,9 +15,12 @@ def ventana_registrar_reserva(root, gestorI):
     set_window_icon(ventana)
     gestorI = gestorI
     # Estilo de la ventana
-    ventana.minsize(400, 400)
-    ventana.geometry("500x450")
+    ventana.minsize(400, 350)
+    ventana.geometry("500x350")
     ventana.configure(bg="#f0f0f0")  # Fondo suave
+    ventana.grab_set()  # Bloquear la interacción con otras ventanas hasta que esta se cierre
+    ventana.transient(root)  # Mantener la ventana siempre adelante
+
 
     # Crear un marco para agrupar los componentes
     frame = ttk.Frame(ventana, padding=10)

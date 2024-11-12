@@ -9,7 +9,8 @@ def ventana_registrar_cliente(root, db, gestor_interfaces):
     ventana.title("Registrar Cliente")
     ventana.geometry("400x650")
     ventana.configure(bg="#e6f3f5")
-    
+    ventana.transient(root)  # Mantener la ventana siempre adelante
+    ventana.grab_set()  # Bloquear la interacción con otras ventanas hasta que esta se cierre
 
     # Crear un marco con padding y estilo
     frame = ttk.Frame(ventana, padding=15)
@@ -83,13 +84,13 @@ def ventana_registrar_cliente(root, db, gestor_interfaces):
     # Botón para registrar cliente
     registrar_btn = ttk.Button(frame, text="Registrar", command=registrar_cliente)
     registrar_btn.pack(pady=10)
-    
+
     # Aplicar estilo al botón
     registrar_btn.configure(style="TButton")
     estilo = ttk.Style()
-    estilo.configure("TButton", font=("Helvetica", 10, "bold"), foreground="#AAAAAA", background="#4caf50")
+    estilo.configure("TButton", font=("Helvetica", 10, "bold"), foreground="#000000", background="#4caf50")
 
-def ventana_ver_clientes(root, db):
+def ventana_ver_clientes(root, clientes):
     ventana = tk.Toplevel(root)
     ventana.title("Lista de Clientes")
     ventana.geometry("900x400")
@@ -109,12 +110,11 @@ def ventana_ver_clientes(root, db):
     estilo.map("Treeview", background=[("selected", "#347083")], foreground=[("selected", "black")])
 
     # Crear el widget Treeview
-    columnas = ("id", "nombre", "apellido", "direccion", "telefono", "email")
+    columnas = ("nombre", "apellido", "direccion", "telefono", "email")
     tree = ttk.Treeview(frame, columns=columnas, show="headings", height=10)
     tree.pack(fill="both", expand=True)
 
     # Definir encabezados de columna
-    tree.heading("id", text="ID")
     tree.heading("nombre", text="Nombre")
     tree.heading("apellido", text="Apellido")
     tree.heading("direccion", text="Dirección")
@@ -122,7 +122,6 @@ def ventana_ver_clientes(root, db):
     tree.heading("email", text="Email")
 
     # Ajustar el ancho de las columnas
-    tree.column("id", width=50, anchor="center")
     tree.column("nombre", width=120, anchor="center")
     tree.column("apellido", width=120, anchor="center")
     tree.column("direccion", width=200, anchor="center")
@@ -134,10 +133,9 @@ def ventana_ver_clientes(root, db):
     tree.tag_configure("evenrow", background="#ffffff")
 
     # Agregar datos a la tabla
-    clientes = db.obtener_clientes()
     for i, cliente in enumerate(clientes):
         tag = "evenrow" if i % 2 == 0 else "oddrow"
-        tree.insert("", "end", values=cliente, tags=(tag,))
+        tree.insert("", "end", values=(cliente[1], cliente[2], cliente[3], cliente[4], cliente[5]), tags=(tag,))
 
     # Barra de desplazamiento vertical
     scrollbar = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)

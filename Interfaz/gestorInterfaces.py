@@ -29,7 +29,7 @@ from tkinter import messagebox
 from tkcalendar import DateEntry
 
 import matplotlib.pyplot as plt
-from datetime import datetime
+from datetime import datetime, date
 from time import sleep
 
 # Clase GestorInterfaces
@@ -68,7 +68,8 @@ class GestorInterfaces:
         ventana_registrar_cliente(self.root, self.db, self)
 
     def abrir_ventana_ver_clientes(self):
-        ventana_ver_clientes(self.root, self.db)
+        clientes = self.db.obtener_clientes()
+        ventana_ver_clientes(self.root, clientes)
 
     #***************** RESERVAS *****************
     def registrar_reserva(self, id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas, ventana):
@@ -82,7 +83,7 @@ class GestorInterfaces:
                 f"tipo de dato del atributo fecha_inicio: {type(fecha_inicio)},\n"
                 f"tipo de dato del atributo fecha_fin: {type(fecha_fin)},\n"
                 f"tipo de dato del atributo cant_personas: {type(cant_personas)}")
-            messagebox.showinfo("id de la última reserva:",id_reserva)
+            #messagebox.showinfo("id de la última reserva:",id_reserva)
             #mostrar el tipo de dato del id_reserva
             print(type(id_reserva))
             id_reserva = int(id_reserva)
@@ -93,7 +94,7 @@ class GestorInterfaces:
             messagebox.showinfo("Registro Exitoso", "Reserva registrada con éxito.")
             # mostrar la reserva, la habitación 
             reserva = self.db.obtener_reserva(id_reserva)
-            messagebox.showinfo("Reserva Registrada", f"Reserva ID: {reserva[0]}\nCliente ID: {reserva[1]}\nHabitación ID: {reserva[2]}\nFecha Inicio: {reserva[3]}\nFecha Fin: {reserva[4]}\nCantidad de Personas: {reserva[5]}")
+            #messagebox.showinfo("Reserva Registrada", f"Reserva ID: {reserva[0]}\nCliente ID: {reserva[1]}\nHabitación ID: {reserva[2]}\nFecha Inicio: {reserva[3]}\nFecha Fin: {reserva[4]}\nCantidad de Personas: {reserva[5]}")
            
             # Generar factura de la reserva
             # Obtener los detalles de la habitación a partir de su ID
@@ -101,11 +102,11 @@ class GestorInterfaces:
             # Extraer el precio por noche de la habitación
             precio_por_noche = habitacion[3]
             
-            # Convertir las fechas de inicio y fin de string a objeto datetime si es necesario
+            # Convertir las fechas de inicio y fin de string a objeto date si es necesario
             if isinstance(fecha_inicio, str) and fecha_inicio:
-                fecha_inicio = datetime.strptime(fecha_inicio, "%Y-%m-%d")
+                fecha_inicio = datetime.strptime(fecha_inicio, "%Y-%m-%d").date()
             if isinstance(fecha_fin, str) and fecha_fin:
-                fecha_fin = datetime.strptime(fecha_fin, "%Y-%m-%d")
+                fecha_fin = datetime.strptime(fecha_fin, "%Y-%m-%d").date()
                 
             # Calcular el número de días de la reserva
             if fecha_inicio and fecha_fin:
@@ -139,7 +140,8 @@ class GestorInterfaces:
         ventana_registrar_empleado(self.root, self.db, self)
 
     def abrir_ventana_ver_empleados(self):
-        ventana_ver_empleados(self.root, self.db)
+        empleados = self.db.obtener_empleados()
+        ventana_ver_empleados(self.root, empleados)
 
     # ***************** REPORTES *****************
     def abrir_ventana_reportes(self):
@@ -210,3 +212,7 @@ class GestorInterfaces:
 
     def obtener_clientes(self):
         return self.db.obtener_clientes()
+
+    def abrir_ventana_mostrar_facturas(self):
+        facturas = self.db.obtener_facturas_con_detalles()
+        self.hotel_app.mostrar_facturas(facturas)

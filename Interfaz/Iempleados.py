@@ -8,6 +8,8 @@ def ventana_registrar_empleado(root, db, gestor_interfaces):
     ventana.minsize(400, 400)
     ventana.geometry("400x400")
     ventana.configure(bg="#f0f0f0")
+    ventana.transient(root)  # Mantener la ventana siempre adelante
+    ventana.grab_set()  # Bloquear la interacción con otras ventanas hasta que esta se cierre
 
     # Estilo de etiquetas y entradas
     label_style = {"font": ("Helvetica", 12), "bg": "#f0f0f0"}
@@ -36,7 +38,7 @@ def ventana_registrar_empleado(root, db, gestor_interfaces):
     # Crear y configurar el Combobox como de solo lectura
     cargo_combobox = ttk.Combobox(ventana, values=["gerente", 
                                                 "cocinero", 
-                                                "Encargado de Limpieza", 
+                                                "Servicio de limpieza", 
                                                 "Encargado de Sábanas"], 
                                 font=("Helvetica", 12), 
                                 state="readonly")
@@ -83,9 +85,13 @@ def ventana_registrar_empleado(root, db, gestor_interfaces):
         
         gestor_interfaces.registrar_empleado(datos["nombre"], datos["apellido"], datos["cargo"], datos["sueldo"], ventana)
 
-    tk.Button(
-        ventana, text="Registrar", command=registrar_empleado, font=("Helvetica", 12), bg="#0b8ad8", fg="white", bd=0, relief="flat", padx=10, pady=5
-    ).pack(pady=20)
+    registrar_btn = ttk.Button(ventana, text="Registrar", command=registrar_empleado)
+    registrar_btn.pack(pady=20)
+
+    # Aplicar estilo al botón
+    registrar_btn.configure(style="TButton")
+    estilo = ttk.Style()
+    estilo.configure("TButton", font=("Helvetica", 10, "bold"), foreground="#000000", background="#4caf50")
 
 def registrar_empleado(nombre, apellido, cargo, sueldo, ventana, db):
     if not nombre or not apellido or not cargo or not sueldo:
@@ -101,7 +107,7 @@ def registrar_empleado(nombre, apellido, cargo, sueldo, ventana, db):
     except ValueError:
         messagebox.showerror("Error", "Por favor ingrese datos válidos.")
 
-def ventana_ver_empleados(root, db):
+def ventana_ver_empleados(root, empleados):
     ventana = tk.Toplevel(root)
     ventana.title("Lista de Empleados")
     ventana.geometry("900x600+0+0")
@@ -121,19 +127,17 @@ def ventana_ver_empleados(root, db):
     estilo.map("Treeview", background=[("selected", "#0b8ad8")])
 
     # Crear el widget Treeview
-    columnas = ("id", "nombre", "apellido", "cargo", "sueldo")
+    columnas = ("nombre", "apellido", "cargo", "sueldo")
     tree = ttk.Treeview(frame, columns=columnas, show="headings", height=10)
     tree.pack(fill="both", expand=True)
 
     # Definir encabezados de columna
-    tree.heading("id", text="ID")
     tree.heading("nombre", text="Nombre")
     tree.heading("apellido", text="Apellido")
     tree.heading("cargo", text="Cargo")
     tree.heading("sueldo", text="Sueldo")
 
     # Ajustar el ancho de las columnas
-    tree.column("id", width=50, anchor="center")
     tree.column("nombre", width=150, anchor="center")
     tree.column("apellido", width=150, anchor="center")
     tree.column("cargo", width=150, anchor="center")
@@ -144,10 +148,9 @@ def ventana_ver_empleados(root, db):
     tree.tag_configure("evenrow", background="#ffffff")
 
     # Agregar datos a la tabla
-    empleados = db.obtener_empleados()
     for i, empleado in enumerate(empleados):
         tag = "evenrow" if i % 2 == 0 else "oddrow"
-        tree.insert("", "end", values=empleado, tags=(tag,))
+        tree.insert("", "end", values=(empleado[1], empleado[2], empleado[3], empleado[4]), tags=(tag,))
 
     # Barra de desplazamiento vertical
     scrollbar = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)

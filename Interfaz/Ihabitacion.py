@@ -6,8 +6,9 @@ from Entidades.habitacion import Habitacion
 def ventana_registrar_habitacion(gestor, root):
     ventana = tk.Toplevel(root)
     ventana.title("Registrar Habitación")
-    ventana.geometry("700x600")
+    ventana.geometry("300x400")
     ventana.configure(bg="#e6f3f5")
+    ventana.attributes('-topmost', True)  # Mantener la ventana en primer plano
 
     frame = ttk.Frame(ventana, padding=15)
     frame.pack(fill="both", expand=True, padx=10, pady=10)

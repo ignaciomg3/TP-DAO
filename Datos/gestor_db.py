@@ -480,6 +480,16 @@ class GestorDB:
         else:
             #self.desconectar()()
             return []
+
+    def obtener_facturas_con_detalles(self):
+        consulta = '''
+            SELECT f.id_reserva AS nro_reserva, c.nombre, c.apellido, r.numero_habitacion, f.fecha_emision, f.total
+            FROM facturas f
+            JOIN clientes c ON f.id_cliente = c.id_cliente
+            JOIN reservas r ON f.id_reserva = r.id_reserva
+        '''
+        cursor = self.ejecutar_consulta(consulta)
+        return cursor.fetchall() if cursor else []
         
     def obtener_empleados(self):
         
