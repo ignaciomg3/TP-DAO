@@ -12,8 +12,8 @@ from Interfaz.Ireportes import *
 from Interfaz.ventanaPrincipal import *
 from Interfaz.Imostrar_habitaciones import *
 from Interfaz.Iasignar_empleado import ventana_asignar_empleado  # Importar la nueva interfaz
-from Interfaz import IReportes2
-from Interfaz.IReportes2 import ventana_reportes  # Importar la nueva interfaz
+#from Interfaz import IReportes2
+#from Interfaz.IReportes2 import ventana_reportes  # Importar la nueva interfaz
 
 # Importar clase de ENTIDADES
 from Entidades.habitacion import *
@@ -84,7 +84,7 @@ class GestorInterfaces:
     # ***************** REPORTES *****************
     def abrir_ventana_reportes(self):
         # GestorI -> IReportes 
-        IReportes2.ventana_reportes(self.root, self.db)
+        ventana_reportes(self.root, self.db)
 
     def abrir_ventana_asignar_empleado(self):
         empleados_limpieza = [Empleado(*e) for e in self.db.obtener_empleados_por_cargo("Servicio de limpieza")]
