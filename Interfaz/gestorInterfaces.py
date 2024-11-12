@@ -120,11 +120,12 @@ class GestorInterfaces:
         except ValueError:
             messagebox.showerror("Error", "Por favor ingrese datos válidos.")
 
-    def registrar_cliente(self, id_cliente, nombre, apellido, direccion, telefono, email, ventana):
-        if not all([id_cliente, nombre, apellido, direccion, telefono, email]):
+    def registrar_cliente(self, nombre, apellido, direccion, telefono, email, ventana):
+        if not all([nombre, apellido, direccion, telefono, email]):
             messagebox.showwarning("Campos incompletos", "Por favor complete todos los campos antes de registrar.")
             return
         try:
+            id_cliente= self.db.obtener_proximo_id_cliente()
             self.db.insertar_cliente(id_cliente, nombre, apellido, direccion, telefono, email)
             messagebox.showinfo("Registro Exitoso", f"Cliente {nombre} {apellido} registrado con éxito.")
             ventana.destroy()
@@ -170,11 +171,12 @@ class GestorInterfaces:
         except Exception as e:
             messagebox.showerror("Error", f"Ocurrió un error al registrar la reserva: {e}")
 
-    def registrar_empleado(self, id_empleado, nombre, apellido, cargo, sueldo, ventana):
-        if not id_empleado or not nombre or not apellido or not cargo or not sueldo:
+    def registrar_empleado(self, nombre, apellido, cargo, sueldo, ventana):
+        if not nombre or not apellido or not cargo or not sueldo:
             messagebox.showerror("Error", "Todos los campos son obligatorios.")
             return
         try:
+            id_empleado= self.db.obtener_proximo_id_empleado()
             self.db.insertar_empleado(id_empleado, nombre, apellido, cargo, sueldo)
             messagebox.showinfo("Registro Exitoso", f"Empleado {nombre} {apellido} registrado con éxito.")
             ventana.destroy()

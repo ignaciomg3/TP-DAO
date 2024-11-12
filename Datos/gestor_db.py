@@ -541,6 +541,20 @@ class GestorDB:
         cursor = self.ejecutar_consulta(consulta)
         max_id = cursor.fetchone()[0]
         return (max_id + 1) if max_id else 1
+    
+    def obtener_proximo_id_cliente(self):
+        """Obtiene el próximo ID de cliente disponible."""
+        consulta = "SELECT MAX(id_cliente) FROM clientes"
+        cursor = self.ejecutar_consulta(consulta)
+        max_id = cursor.fetchone()[0]
+        return (max_id + 1) if max_id else 1
+    
+    def obtener_proximo_id_empleado(self):
+        """Obtiene el próximo ID de empleado disponible."""
+        consulta = "SELECT MAX(id_cliente) FROM clientes"
+        cursor = self.ejecutar_consulta(consulta)
+        max_id = cursor.fetchone()[0]
+        return (max_id + 1) if max_id else 1
 
     #***************************** ACTUALIZAR DATOS ***********************
 

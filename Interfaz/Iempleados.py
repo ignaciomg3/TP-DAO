@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from Interfaz.gestorInterfaces import GestorInterfaces
+from Interfaz.gestorInterfaces import *
 
 
 def ventana_registrar_empleado(root, db, gestor_interfaces):
@@ -14,9 +14,9 @@ def ventana_registrar_empleado(root, db, gestor_interfaces):
     entry_style = {"font": ("Helvetica", 12), "bg": "#ffffff", "bd": 2, "relief": "groove"}
 
     # Campos de entrada
-    tk.Label(ventana, text="ID de Empleado:", **label_style).pack(pady=(10, 5))
-    id_empleado_entry = tk.Entry(ventana, **entry_style)
-    id_empleado_entry.pack(pady=(0, 10))
+    #tk.Label(ventana, text="ID de Empleado:", **label_style).pack(pady=(10, 5))
+    #id_empleado_entry = tk.Entry(ventana, **entry_style)
+    #id_empleado_entry.pack(pady=(0, 10))
 
     tk.Label(ventana, text="Nombre:", **label_style).pack(pady=(10, 5))
     nombre_entry = tk.Entry(ventana, **entry_style)
@@ -40,24 +40,23 @@ def ventana_registrar_empleado(root, db, gestor_interfaces):
 
     def registrar_empleado():
         datos = {
-            "id_empleado": id_empleado_entry.get(),
+            #"id_empleado": id_empleado_entry.get(),
             "nombre": nombre_entry.get(),
             "apellido": apellido_entry.get(),
             "cargo": cargo_combobox.get(),
             "sueldo": sueldo_entry.get()
         }
-        gestor_interfaces.registrar_empleado(datos["id_empleado"], datos["nombre"], datos["apellido"], datos["cargo"], datos["sueldo"], ventana)
+        gestor_interfaces.registrar_empleado(datos["nombre"], datos["apellido"], datos["cargo"], datos["sueldo"], ventana)
 
     tk.Button(
         ventana, text="Registrar", command=registrar_empleado, font=("Helvetica", 12), bg="#0b8ad8", fg="white", bd=0, relief="flat", padx=10, pady=5
     ).pack(pady=20)
 
-def registrar_empleado(id_empleado, nombre, apellido, cargo, sueldo, ventana, db):
-    if not id_empleado or not nombre or not apellido or not cargo or not sueldo:
+def registrar_empleado(nombre, apellido, cargo, sueldo, ventana, db):
+    if not nombre or not apellido or not cargo or not sueldo:
         messagebox.showerror("Error", "Todos los campos son obligatorios.")
         return
     try:
-        db.insertar_empleado(id_empleado, nombre, apellido, cargo, sueldo)
         messagebox.showinfo("Registro Exitoso", f"Empleado {nombre} {apellido} registrado con éxito.")
         ventana.destroy()
     except ValueError:
