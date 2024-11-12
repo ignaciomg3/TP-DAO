@@ -1,8 +1,6 @@
 from Datos.gestor_db import GestorDB
 
-def reporte_ocupacion_promedio(mes):
-    gestor = GestorDB()
-    gestor.conectar()
+def reporte_ocupacion_promedio(gestor, mes):
     consulta = '''
         SELECT tipo, AVG(ocupacion) as ocupacion_promedio
         FROM (
@@ -16,5 +14,4 @@ def reporte_ocupacion_promedio(mes):
     '''
     cursor = gestor.ejecutar_consulta(consulta, (mes,))
     ocupacion_promedio = cursor.fetchall() if cursor else []
-    gestor.desconectar()
     return ocupacion_promedio
