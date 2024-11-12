@@ -558,6 +558,15 @@ class GestorDB:
 
     #***************************** ACTUALIZAR DATOS ***********************
 
+    #actualizar habitacion estado por parametro
+    def actualizar_estado_habitacion(self, numero, estado):
+        """Actualiza el estado de una habitación por su número."""
+        consulta = 'UPDATE habitaciones SET estado = ? WHERE numero = ?'
+        resultado = self.ejecutar_consulta(consulta, (estado, numero))
+        if resultado:
+            print("Estado de la habitación actualizado correctamente.")
+
+    
     #***************************** ELIMINAR DATOS ***********************
 
     def eliminar_habitacion(self, numero):
