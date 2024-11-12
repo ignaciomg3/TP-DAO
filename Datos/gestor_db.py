@@ -89,6 +89,7 @@ class GestorDB:
         self._crear_tabla_empleados()
         self._crear_tabla_reservas()
         self._crear_tabla_facturas()
+        self._crear_tabla_servicio_limpieza()  # Crear la tabla servicio_limpieza
         # Llamar a otras funciones de creación de tablas aquí...
         
         self._insertar_datos_iniciales()
@@ -148,6 +149,15 @@ class GestorDB:
                             )''')
         print("Tabla facturas creada correctamente.")
         self.conn.commit()
+
+    def _crear_tabla_servicio_limpieza(self):
+        """Crea la tabla servicio_limpieza si no existe."""
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS servicio_limpieza (
+                               id_empleado INTEGER,
+                               id_habitacion INTEGER,
+                               fecha TEXT
+                            )''')
+        print("Tabla servicio_limpieza creada correctamente.")
 
 #***************************** INSERTAR DATOS RANDOMS***********************
     
@@ -311,6 +321,10 @@ class GestorDB:
         self.ejecutar_consulta(consulta, (id_empleado, nombre, apellido, cargo, sueldo))
         print("Empleado insertado correctamente.")
         
+    def insertar_servicio_limpieza(self, id_empleado, id_habitacion, fecha):
+        consulta = "INSERT INTO servicio_limpieza (id_empleado, id_habitacion, fecha) VALUES (?, ?, ?)"
+        parametros = (id_empleado, id_habitacion, fecha)
+        self.ejecutar_consulta(consulta, parametros)
     
     #***************************** CONSULTAS (Obtener todas y también por ID) ***********************
     def obtener_habitaciones(self):
@@ -398,6 +412,12 @@ class GestorDB:
         else:
             #self.desconectar()()
             return []
+
+    def obtener_empleados_por_cargo(self, cargo):
+        """Obtiene empleados por cargo."""
+        consulta = 'SELECT * FROM empleados WHERE cargo = ?'
+        cursor = self.ejecutar_consulta(consulta, (cargo,))
+        return cursor.fetchall() if cursor else []
 
     def filtrar_habitaciones(self, fecha_seleccionada):
         consulta = """

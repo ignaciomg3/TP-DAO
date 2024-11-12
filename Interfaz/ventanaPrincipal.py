@@ -33,7 +33,8 @@ class HotelApp:
             "reserva": tk.PhotoImage(file="icons/reserva.png"),
             "empleado": tk.PhotoImage(file="icons/empleado.png"),
             "ver_empleados": tk.PhotoImage(file="icons/ver_empleados.png"),
-            "reportes": tk.PhotoImage(file="icons/reportes.png")
+            "reportes": tk.PhotoImage(file="icons/reportes.png"),
+            "limpieza": tk.PhotoImage(file="icons/limpieza.png")  # Icono para asignar limpieza
         }
 
         # Guardar referencias a las imágenes para evitar que sean recolectadas por el recolector de basura
@@ -48,6 +49,7 @@ class HotelApp:
             ("Registrar Reservas", lambda: gestorI.abrir_ventana_registrar_reserva(), self.iconos["reserva"]),
             ("Registrar Empleado", lambda: gestorI.abrir_ventana_registrar_empleado(), self.iconos["empleado"]),
             ("Ver Empleados", lambda: gestorI.abrir_ventana_ver_empleados(), self.iconos["ver_empleados"]),
+            ("Asignar Limpieza", lambda: gestorI.abrir_ventana_asignar_empleado(), self.iconos["limpieza"]),
             ("Reportes", lambda: gestorI.abrir_ventana_reportes(), self.iconos["reportes"])
         ]
 
