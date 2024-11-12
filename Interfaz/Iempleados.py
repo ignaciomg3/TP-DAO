@@ -30,11 +30,24 @@ def ventana_registrar_empleado(root, db, gestor_interfaces):
     # cargo_entry = tk.Entry(ventana, **entry_style)
     # cargo_entry.pack(pady=(0, 10))
 
+    # Etiqueta para el cargo
     tk.Label(ventana, text="Cargo:", **label_style).pack(pady=(10, 5))
-    cargo_combobox = ttk.Combobox(ventana, values=["gerente", "cocinero", "Encargado de Limpieza", "Encargado de Sábanas"], font=("Helvetica", 12))
+
+    # Crear y configurar el Combobox como de solo lectura
+    cargo_combobox = ttk.Combobox(ventana, values=["gerente", 
+                                                "cocinero", 
+                                                "Encargado de Limpieza", 
+                                                "Encargado de Sábanas"], 
+                                font=("Helvetica", 12), 
+                                state="readonly")
+    #Readonly para que no se pueda escribir en el combobox
+    # Preseleccionar el primer elemento
+    cargo_combobox.current(0)
+
+    # Posicionar el Combobox
     cargo_combobox.pack(pady=(0, 10))
 
-    tk.Label(ventana, text="Sueldo:", **label_style).pack(pady=(10, 5))
+    tk.Label(ventana, text="Sueldo: $", **label_style).pack(pady=(10, 5))
     sueldo_entry = tk.Entry(ventana, **entry_style)
     sueldo_entry.pack(pady=(0, 10))
 
@@ -46,6 +59,28 @@ def ventana_registrar_empleado(root, db, gestor_interfaces):
             "cargo": cargo_combobox.get(),
             "sueldo": sueldo_entry.get()
         }
+        # Validaciones
+        if not all(datos.values()):
+            messagebox.showerror("Error", "Todos los campos son obligatorios.")
+            return
+
+        if any(char.isdigit() for char in datos["nombre"]):
+            messagebox.showerror("Error", "El nombre no debe contener números.")
+            return
+
+        if any(char.isdigit() for char in datos["apellido"]):
+            messagebox.showerror("Error", "El apellido no debe contener números.")
+            return
+
+        try:
+            sueldo = float(datos["sueldo"])
+            if sueldo < 100:
+                messagebox.showerror("Error", "El sueldo debe ser un número mayor o igual a 100.")
+                return
+        except ValueError:
+            messagebox.showerror("Error", "El sueldo debe ser un número válido.")
+            return
+        
         gestor_interfaces.registrar_empleado(datos["nombre"], datos["apellido"], datos["cargo"], datos["sueldo"], ventana)
 
     tk.Button(

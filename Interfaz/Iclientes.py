@@ -57,6 +57,27 @@ def ventana_registrar_cliente(root, db, gestor_interfaces):
             "telefono": telefono_entry.get(),
             "email": email_entry.get()
         }
+        # Validaciones
+        if not all(datos.values()):
+            messagebox.showerror("Error", "Todos los campos son obligatorios.")
+            return
+
+        if "@" not in datos["email"]:
+            messagebox.showerror("Error", "El email debe contener '@'.")
+            return
+
+        if any(char.isdigit() for char in datos["nombre"]):
+            messagebox.showerror("Error", "El nombre no debe contener números.")
+            return
+
+        if any(char.isdigit() for char in datos["apellido"]):
+            messagebox.showerror("Error", "El apellido no debe contener números.")
+            return
+
+        if any(char.isalpha() for char in datos["telefono"]):
+            messagebox.showerror("Error", "El teléfono no debe contener letras.")
+            return
+        
         gestor_interfaces.registrar_cliente(datos["nombre"], datos["apellido"], datos["direccion"], datos["telefono"], datos["email"], ventana)
 
     # Botón para registrar cliente
