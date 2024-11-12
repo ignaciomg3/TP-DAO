@@ -60,7 +60,7 @@ class HotelApp:
 
         # Configurar el estilo para el fondo
         estilo_frame = ttk.Style()
-        estilo_frame.configure("Card.TFrame", background="#97C4B8")
+        #estilo_frame.configure("Card.TFrame", background="#FFFFFC")  # Cambiar a color blanco
 
         # Configurar el grid para que sea responsive
         columnas = 3

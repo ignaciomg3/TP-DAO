@@ -61,23 +61,19 @@ def crear_boton_reporte(ventana, texto, comando):
     return boton
 
 
-def ventana_reportes(root, db):
+def ventana_reportes2(root, db):
     ventana = tk.Toplevel(root)
     ventana.title("Reportes")
     ventana.geometry("700x600")
     gestor_reportes = GestorReportes(db)
-    #mostrar_filtros_fechas(ventana)
-    #date_entry_desde, date_entry_hasta = mostrar_filtros_fechas(ventana)
-    #fecha_inicio = date_entry_desde.get_date()
-    #fecha_fin = date_entry_hasta.get_date()
+    date_entry_desde, date_entry_hasta = mostrar_filtros_fechas(ventana)
     
-    # Crear fechas ficticias
-    fecha_inicio = datetime(2023, 1, 1)
-    fecha_fin = datetime(2023, 12, 31)
+    def obtener_fechas_y_mostrar_reporte():
+        fecha_inicio = date_entry_desde.get_date().strftime('%Y-%m-%d')
+        fecha_fin = date_entry_hasta.get_date().strftime('%Y-%m-%d')
+        mostrar_reporte_reservas("Reservas", gestor_reportes.generar_reporte_reservas(fecha_inicio, fecha_fin))
 
-    crear_boton_reporte(ventana, "Reporte de Reservas",
-                        lambda: mostrar_reporte_reservas("Reservas",
-                                                         gestor_reportes.generar_reporte_reservas(fecha_inicio, fecha_fin)))
+    crear_boton_reporte(ventana, "Reporte de Reservas", obtener_fechas_y_mostrar_reporte)
     crear_boton_reporte(ventana, "Reporte de Ingresos",
                         lambda: mostrar_reporte("Ingresos",
                                                 gestor_reportes.generar_reporte_ingresos()))

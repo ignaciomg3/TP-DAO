@@ -1,6 +1,6 @@
 from Datos.gestor_db import GestorDB
 
-def reporte_ocupacion_promedio():
+def reporte_ocupacion_promedio(mes):
     gestor = GestorDB()
     gestor.conectar()
     consulta = '''
@@ -9,11 +9,12 @@ def reporte_ocupacion_promedio():
             SELECT habitaciones.tipo, COUNT(reservas.id_reserva) as ocupacion
             FROM habitaciones
             LEFT JOIN reservas ON habitaciones.numero = reservas.numero_habitacion
+            WHERE strftime('%Y-%m', reservas.fecha_entrada) = ?
             GROUP BY habitaciones.tipo
         )
         GROUP BY tipo
     '''
-    cursor = gestor.ejecutar_consulta(consulta)
+    cursor = gestor.ejecutar_consulta(consulta, (mes,))
     ocupacion_promedio = cursor.fetchall() if cursor else []
     gestor.desconectar()
     return ocupacion_promedio
