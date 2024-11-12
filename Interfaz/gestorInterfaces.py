@@ -216,3 +216,7 @@ class GestorInterfaces:
     def abrir_ventana_mostrar_facturas(self):
         facturas = self.db.obtener_facturas_con_detalles()
         self.hotel_app.mostrar_facturas(facturas)
+
+    def verificar_habitacion_existente(self, numero):
+        """Verifica si una habitación con el número dado ya existe en la base de datos."""
+        return self.db.obtener_habitacion(numero) is not None

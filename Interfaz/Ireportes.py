@@ -7,37 +7,44 @@ from datetime import datetime
 def ventana_reportes(root, db):
     ventana = tk.Toplevel(root)
     ventana.title("Reportes")
-    ventana.geometry("700x600")
+    ventana.geometry("400x400")
 
     gestor_reportes = GestorReportes(db)
 
     ventana.protocol("WM_DELETE_WINDOW", lambda: cerrar_ventana_reportes(ventana))
 
+    # Crear un estilo para los botones
+    estilo_boton = ttk.Style()
+    estilo_boton.configure("TButton", padding=10, width=30)
+
     # Botón para Reporte 1 - Reservas
     boton_reporte1 = ttk.Button(ventana, text="Reporte de Reservas",
-                                command=lambda: ventana_filtro_reservas(gestor_reportes))
+                                command=lambda: ventana_filtro_reservas(gestor_reportes),
+                                style="TButton")
     boton_reporte1.pack(pady=10)
 
     # Botón para Reporte 2 - Ingresos
     boton_reporte2 = ttk.Button(ventana, text="Reporte de Ingresos",
-                                command=lambda: ventana_filtro_mes(gestor_reportes.generar_reporte_ingresos, "Ingresos"))
+                                command=lambda: ventana_filtro_mes(gestor_reportes.generar_reporte_ingresos, "Ingresos"),
+                                style="TButton")
     boton_reporte2.pack(pady=10)
 
     # Botón para Reporte 3 - Ocupación
     boton_reporte3 = ttk.Button(ventana, text="Reporte de Ocupación",
-                                command=lambda: ventana_filtro_mes(gestor_reportes.generar_reporte_ocupacion, "Ocupación"))
+                                command=lambda: ventana_filtro_mes(gestor_reportes.generar_reporte_ocupacion, "Ocupación"),
+                                style="TButton")
     boton_reporte3.pack(pady=10)
 
     # Opcional: botones de gráficos con el mismo estilo
     boton_graficar_ingresos = ttk.Button(ventana, text="Graficar Ingresos Mensuales",
-                                          command=lambda: ventana_filtro_mes(gestor_reportes.graficar_ingresos_mensuales, "Graficar Ingresos Mensuales"),
+                                          command=lambda: gestor_reportes.graficar_ingresos_mensuales(),
                                           style="TButton")
-    boton_graficar_ingresos.pack(pady=10, padx=20, fill="x")
+    boton_graficar_ingresos.pack(pady=10)
 
     boton_graficar_ocupacion = ttk.Button(ventana, text="Graficar Ocupación Promedio",
-                                           command=lambda: ventana_filtro_mes(gestor_reportes.graficar_ocupacion_promedio, "Graficar Ocupación Promedio"),
-                                             style="TButton")
-    boton_graficar_ocupacion.pack(pady=10, padx=20, fill="x")
+                                           command=lambda: gestor_reportes.graficar_ocupacion_promedio(),
+                                           style="TButton")
+    boton_graficar_ocupacion.pack(pady=10)
 
 def cerrar_ventana_reportes(ventana):
     ventana.destroy()
@@ -75,7 +82,7 @@ def ventana_filtro_mes(funcion_reporte, titulo):
     date_entry_mes.pack(pady=5)
 
     boton_filtrar = ttk.Button(ventana_filtro, text="Filtrar",
-                               command=lambda: mostrar_reporte_ocupacion(titulo, funcion_reporte(date_entry_mes.get_date().strftime('%Y-%m-01'))))
+                               command=lambda: mostrar_reporte_tabla(titulo, funcion_reporte(date_entry_mes.get_date().strftime('%Y-%m'))))
     boton_filtrar.pack(pady=10)
 
 def mostrar_reporte(titulo, datos):
@@ -98,11 +105,18 @@ def mostrar_reporte_tabla(titulo, datos):
         messagebox.showinfo("Sin datos", f"No hay datos disponibles para el reporte de {titulo}.")
         return
 
-    columnas = [f"Columna {i+1}" for i in range(len(datos[0]))]
+    # Definir los encabezados específicos para cada tipo de reporte
+    if titulo == "Ingresos":
+        columnas = ["Nro Habitacion", "Tipo Habitacion", "Precio por noche"]
+    elif titulo == "Ocupación":
+        columnas = ["Tipo Habitacion", "Ocupación Promedio"]
+    else:
+        columnas = [f"Columna {i+1}" for i in range(len(datos[0]))]
+
     tree["columns"] = columnas
 
     # Configurar encabezados
-    for i, col in enumerate(columnas):
+    for col in columnas:
         tree.heading(col, text=col)
         tree.column(col, anchor="center", width=100)
 
@@ -192,7 +206,7 @@ def mostrar_reporte_ingresos(titulo, datos):
         return
 
     # Definir las columnas
-    columnas = ["Número", "Tipo", "Ingresos"]
+    columnas = ["Nro Habitacion", "Tipo Habitacion", "Precio por noche"]
     tree["columns"] = columnas
 
     # Configurar encabezados
@@ -238,7 +252,7 @@ def mostrar_reporte_ocupacion(titulo, datos):
         return
 
     # Definir las columnas
-    columnas = ["Tipo", "Ocupación Promedio"]
+    columnas = ["Tipo Habitacion", "Ocupación Promedio"]
     tree["columns"] = columnas
 
     # Configurar encabezados
@@ -256,7 +270,7 @@ def mostrar_reporte_ocupacion(titulo, datos):
     # Agregar los datos a la tabla
     for i, fila in enumerate(datos):
         tag = "evenrow" if i % 2 == 0 else "oddrow"
-        tree.insert("", "end", values=fila, tags=(tag,))
+        tree.insert("", "end", values = fila, tags=(tag,))
 
     # Barra de desplazamiento vertical
     scrollbar_y = ttk.Scrollbar(ventana_tabla, orient="vertical", command=tree.yview)

@@ -60,6 +60,11 @@ def ventana_registrar_habitacion(gestor, root):
         estado = estado_entry.get()
         precio = precio_entry.get()
 
+        # Verificar si el número de habitación ya existe en la base de datos a través del gestor
+        if gestor.verificar_habitacion_existente(numero):
+            messagebox.showerror("Error", "Ese número de habitación ya está siendo utilizado.")
+            return
+
         habitacion = registrar_habitacion(numero, tipo, estado, precio)
 
         if habitacion:  # Solo proceder si se creó el objeto exitosamente

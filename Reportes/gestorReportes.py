@@ -30,15 +30,13 @@ class GestorReportes:
         self.reportes.append(ocupacion)
         return ocupacion
 
-    def graficar_ocupacion_promedio(self, mes):
-        """Genera un gráfico de barras mostrando la ocupación promedio por tipo de habitación para un mes específico."""
-        mes_formateado = mes[:7]  # Formatear como 'año-mes'
-        graficar_ocupacion_promedio(mes_formateado)
+    def graficar_ocupacion_promedio(self):
+        """Genera un gráfico de barras mostrando la ocupación promedio por tipo de habitación."""
+        graficar_ocupacion_promedio(self.gestor_db)
 
-    def graficar_ingresos_mensuales(self, mes):
-        """Genera un gráfico de líneas mostrando los ingresos mensuales para un mes específico."""
-        mes_formateado = mes[:7]  # Formatear como 'año-mes'
-        graficar_ingresos_mensuales(mes_formateado)
+    def graficar_ingresos_mensuales(self):
+        """Genera un gráfico de líneas mostrando los ingresos mensuales."""
+        graficar_ingresos_mensuales(self.gestor_db)
 
     def listar_reportes(self):
         """Lista todos los reportes generados."""

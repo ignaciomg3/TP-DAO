@@ -4,9 +4,7 @@ import sqlite3
 from datetime import datetime
 from time import sleep
 
-def graficar_ocupacion_promedio():
-    gestor = GestorDB()
-    gestor.conectar()
+def graficar_ocupacion_promedio(gestor):
     consulta = '''
         SELECT tipo, AVG(ocupacion) as ocupacion_promedio
         FROM (
@@ -28,20 +26,15 @@ def graficar_ocupacion_promedio():
     plt.title('Ocupación Promedio por Tipo de Habitación')
     plt.show()
 
-def graficar_ingresos_mensuales():
-    gestor = GestorDB()
-    gestor.conectar()
-    gestor._insertar_datos_iniciales()
+def graficar_ingresos_mensuales(gestor):
     # Consulta para obtener los ingresos mensuales
-    sleep (1)
     consulta = '''
         SELECT strftime('%Y-%m', fecha_emision) AS mes, SUM(total) AS total_generado
         FROM facturas
-            
-            GROUP BY mes
-            ORDER BY mes
+        GROUP BY mes
+        ORDER BY mes
     '''
-    cursor = gestor.ejecutar_consulta(consulta, )
+    cursor = gestor.ejecutar_consulta(consulta)
     datos = cursor.fetchall() if cursor else []
 
     # Crear un diccionario para los ingresos por mes
@@ -68,6 +61,4 @@ def graficar_ingresos_mensuales():
     plt.grid()
     plt.tight_layout()
     plt.show()
-    
-    gestor.desconectar()
 
