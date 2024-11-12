@@ -65,7 +65,7 @@ class GestorInterfaces:
 
     #***************** CLIENTES *****************
     def abrir_ventana_registrar_cliente(self):
-        ventana_registrar_cliente(self.root, self.db)
+        ventana_registrar_cliente(self.root, self.db, self)
 
     def abrir_ventana_ver_clientes(self):
         ventana_ver_clientes(self.root, self.db)
@@ -74,8 +74,9 @@ class GestorInterfaces:
     def abrir_ventana_registrar_reserva(self):
         ventana_registrar_reserva(self.root, self)
 
+    #***************** EMPLEADOS *****************
     def abrir_ventana_registrar_empleado(self):
-        ventana_registrar_empleado(self.root, self.db)
+        ventana_registrar_empleado(self.root, self.db, self)
 
     def abrir_ventana_ver_empleados(self):
         ventana_ver_empleados(self.root, self.db)
@@ -136,7 +137,7 @@ class GestorInterfaces:
                 raise ValueError("Todos los campos son obligatorios.")
             id_reserva = self.db.obtener_proximo_id_reserva()  # Obtener el próximo ID de reserva
             messagebox.showinfo("id de la última reserva:",id_reserva)
-            #mostrar el tipo de dato de 
+            #mostrar el tipo de dato del id_reserva
             print(type(id_reserva))
             id_reserva = int(id_reserva)
             self.db.insertar_reserva(id_reserva, id_cliente, id_habitacion, fecha_inicio, fecha_fin, cant_personas)

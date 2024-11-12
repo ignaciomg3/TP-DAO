@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-# from Interfaz.gestorInterfaces import GestorInterfaces
+from Interfaz.gestorInterfaces import GestorInterfaces
 
 
-def ventana_registrar_empleado(root, db):
+def ventana_registrar_empleado(root, db, gestor_interfaces):
     ventana = tk.Toplevel(root)
     ventana.minsize(400, 400)
     ventana.geometry("400x400")
@@ -26,9 +26,13 @@ def ventana_registrar_empleado(root, db):
     apellido_entry = tk.Entry(ventana, **entry_style)
     apellido_entry.pack(pady=(0, 10))
 
+    # tk.Label(ventana, text="Cargo:", **label_style).pack(pady=(10, 5))
+    # cargo_entry = tk.Entry(ventana, **entry_style)
+    # cargo_entry.pack(pady=(0, 10))
+
     tk.Label(ventana, text="Cargo:", **label_style).pack(pady=(10, 5))
-    cargo_entry = tk.Entry(ventana, **entry_style)
-    cargo_entry.pack(pady=(0, 10))
+    cargo_combobox = ttk.Combobox(ventana, values=["gerente", "cocinero", "Encargado de Limpieza", "Encargado de Sábanas"], font=("Helvetica", 12))
+    cargo_combobox.pack(pady=(0, 10))
 
     tk.Label(ventana, text="Sueldo:", **label_style).pack(pady=(10, 5))
     sueldo_entry = tk.Entry(ventana, **entry_style)
@@ -39,10 +43,10 @@ def ventana_registrar_empleado(root, db):
             "id_empleado": id_empleado_entry.get(),
             "nombre": nombre_entry.get(),
             "apellido": apellido_entry.get(),
-            "cargo": cargo_entry.get(),
+            "cargo": cargo_combobox.get(),
             "sueldo": sueldo_entry.get()
         }
-        GestorInterfaces().registrar_empleado(datos["id_empleado"], datos["nombre"], datos["apellido"], datos["cargo"], datos["sueldo"], ventana)
+        gestor_interfaces.registrar_empleado(datos["id_empleado"], datos["nombre"], datos["apellido"], datos["cargo"], datos["sueldo"], ventana)
 
     tk.Button(
         ventana, text="Registrar", command=registrar_empleado, font=("Helvetica", 12), bg="#0b8ad8", fg="white", bd=0, relief="flat", padx=10, pady=5

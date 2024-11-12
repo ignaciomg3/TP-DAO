@@ -1,14 +1,15 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-# from Interfaz.gestorInterfaces import GestorInterfaces
+from Interfaz.gestorInterfaces import GestorInterfaces
 from Entidades.cliente import Cliente
 
 
-def ventana_registrar_cliente(root, db):
+def ventana_registrar_cliente(root, db, gestor_interfaces):
     ventana = tk.Toplevel(root)
     ventana.title("Registrar Cliente")
     ventana.geometry("400x650")
     ventana.configure(bg="#e6f3f5")
+    
 
     # Crear un marco con padding y estilo
     frame = ttk.Frame(ventana, padding=15)
@@ -56,7 +57,7 @@ def ventana_registrar_cliente(root, db):
             "telefono": telefono_entry.get(),
             "email": email_entry.get()
         }
-        GestorInterfaces().registrar_cliente(datos["id_cliente"], datos["nombre"], datos["apellido"], datos["direccion"], datos["telefono"], datos["email"], ventana)
+        gestor_interfaces().registrar_cliente(datos["id_cliente"], datos["nombre"], datos["apellido"], datos["direccion"], datos["telefono"], datos["email"], ventana)
 
     # Botón para registrar cliente
     registrar_btn = ttk.Button(frame, text="Registrar", command=registrar_cliente)
