@@ -12,6 +12,8 @@ from Interfaz.Ireportes import *
 from Interfaz.ventanaPrincipal import *
 from Interfaz.Imostrar_habitaciones import *
 from Interfaz.Iasignar_empleado import ventana_asignar_empleado  # Importar la nueva interfaz
+from Interfaz import IReportes2
+from Interfaz.IReportes2 import ventana_reportes  # Importar la nueva interfaz
 
 # Importar clase de ENTIDADES
 from Entidades.habitacion import *
@@ -44,6 +46,7 @@ class GestorInterfaces:
         self.hotel_app = HotelApp(self.root, self)
         self.hotel_app.mostrarPantalla()
 
+    #***************** HABITACIONES *****************
     def abrir_ventana_registrar_habitacion(self):
         print("Abriendo ventana registrar habitacion")
         habit = ventana_registrar_habitacion(self, self.root)  # Llamar a la interfaz de registro de habitación
@@ -59,12 +62,14 @@ class GestorInterfaces:
     def filtrar_habitaciones(self, fecha_seleccionada):
         return self.db.filtrar_habitaciones(fecha_seleccionada)
 
+    #***************** CLIENTES *****************
     def abrir_ventana_registrar_cliente(self):
         ventana_registrar_cliente(self.root, self.db)
 
     def abrir_ventana_ver_clientes(self):
         ventana_ver_clientes(self.root, self.db)
 
+    #***************** RESERVAS *****************
     def abrir_ventana_registrar_reserva(self):
         ventana_registrar_reserva(self.root, self)
 
@@ -74,8 +79,10 @@ class GestorInterfaces:
     def abrir_ventana_ver_empleados(self):
         ventana_ver_empleados(self.root, self.db)
 
+    # ***************** REPORTES *****************
     def abrir_ventana_reportes(self):
-        Ireportes.ventana_reportes(self.root, self.db)
+        # GestorI -> IReportes 
+        IReportes2.ventana_reportes(self.root, self.db)
 
     def abrir_ventana_asignar_empleado(self):
         empleados_limpieza = [Empleado(*e) for e in self.db.obtener_empleados_por_cargo("Servicio de limpieza")]

@@ -15,7 +15,7 @@ class GestorReportes:
         self.reportes.append(reservas)
         return reservas
 
-    def generar_reporte_ingresos(self):
+    def generar_reporte_ingresos(self): 
         return generar_reporte_ingresos()
 
     def generar_reporte_ocupacion(self):

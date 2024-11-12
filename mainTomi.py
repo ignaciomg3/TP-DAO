@@ -90,7 +90,7 @@ def main():
                 #numero_habitacion= input("Ingrese el número de su habitación: ")
                 fecha_inicio = input("Fecha de inicio (YYYY-MM-DD): ")
                 fecha_fin = input("Fecha de fin (YYYY-MM-DD): ")
-                reportes = gestor_reportes.generar_reporte_reservas (fecha_inicio, fecha_fin)
+                reportes = gestor_reportes.generar_reporte_reservas(fecha_inicio, fecha_fin)
                 print(reportes)
                 
 
