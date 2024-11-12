@@ -36,6 +36,15 @@ class GestorDB:
         else:
             print("No se encontró ninguna base de datos para borrar.")
 
+    def crear_base_de_datos(self):
+        """Crea una base de datos SQLite con tablas iniciales."""
+        try:
+            self.conn = sqlite3.connect(self.db_name)
+            self.cursor = self.conn.cursor()
+            print("Base de datos creada exitosamente.")
+        except sqlite3.Error as e:
+            print(f"Error al crear la base de datos: {e}")
+
     def conectar(self):
         """Establece la conexión con la base de datos."""
         try:
@@ -75,6 +84,15 @@ class GestorDB:
             print(f"Error al ejecutar la consulta: {e}")
             return None
 
+    def borrar_datos_de_tablas(self):
+        """Borra los datos de todas las tablas de la base de datos."""
+        self.conectar()
+        tablas = ['habitaciones', 'clientes', 'empleados', 'reservas', 'facturas', 'servicio_limpieza']
+        for tabla in tablas:
+            self.cursor.execute(f"DELETE FROM {tabla}")
+        self.conn.commit()
+        print("Datos de las tablas eliminados correctamente.")
+        
 #***************************** CREAR TABLAS ***********************
     def crear_tablas(self):
         self.conectar()
@@ -244,6 +262,23 @@ class GestorDB:
                         ])
         self.conn.commit()
 
+        self.cursor.executemany('''INSERT INTO servicio_limpieza (id_empleado, id_habitacion, fecha)    
+                        VALUES (?, ?, ?)''', [
+                            (2, 101, '2024-03-02'),
+                            (7, 102, '2024-03-11'),
+                            (2, 103, '2024-03-06'),
+                            (7, 104, '2024-03-13'),
+                            (2, 105, '2024-03-16'),
+                            (7, 201, '2024-03-20'),
+                            (2, 202, '2024-03-12'),
+                            (7, 203, '2024-03-14'),
+                            (2, 204, '2024-03-15'),
+                            (7, 205, '2024-03-17'),
+                            (2, 301, '2024-03-19'),
+                            (7, 302, '2024-03-21')
+                        ])
+
+
 #***************************** INSERTAR DATOS ***********************
 
     def insertar_habitacion(self, numero, tipo, estado, precio_por_noche):
@@ -312,6 +347,29 @@ class GestorDB:
             #self.desconectar()
             pass
 
+    def insertar_factura_autoincremental(self, id_cliente, id_reserva, fecha_emision, total):
+        """Inserta una nueva factura en la base de datos con ID autoincremental como una transacción."""
+        consulta = '''
+            INSERT INTO facturas (id_cliente, id_reserva, fecha_emision, total)
+            VALUES (?, ?, ?, ?)
+                '''
+        try:
+            self.conectar()
+            self.conn.execute('BEGIN TRANSACTION')
+            resultado = self.ejecutar_consulta(consulta, (id_cliente, id_reserva, fecha_emision, total))
+            if resultado:
+                self.conn.commit()
+                print("Factura insertada correctamente.")
+            else:
+                self.conn.rollback()
+                print("Error al insertar la factura. Transacción revertida.")
+        except sqlite3.Error as e:
+            self.conn.rollback()
+            print(f"Error al insertar la factura: {e}. Transacción revertida.")
+        finally:
+            #self.desconectar()
+            pass
+
     def insertar_empleado(self, id_empleado, nombre, apellido, cargo, sueldo):
         """Inserta un nuevo empleado en la base de datos."""
         consulta = '''
@@ -341,6 +399,20 @@ class GestorDB:
             ##self.desconectar()
             return []
    
+    def obtener_habitacion(self, numero):
+        """Obtiene una habitación específica por su número."""
+        self.conectar()
+        consulta = 'SELECT * FROM habitaciones WHERE numero = ?'
+        cursor = self.ejecutar_consulta(consulta, (numero,))
+        if cursor:
+            habitacion = cursor.fetchone()
+            #self.desconectar()
+            return habitacion
+        else:
+            print("No se pudo obtener la habitación.")
+            #self.desconectar()
+            return None
+        
     def obtener_clientes(self):
         """Obtiene todos los clientes de la base de datos."""
         self.conectar()
@@ -356,7 +428,6 @@ class GestorDB:
             #self.desconectar()
             return []
         
-    
     def obtener_reservas(self):
         
         """Obtiene todas las reservas de la base de datos."""
@@ -460,6 +531,13 @@ class GestorDB:
     def obtener_proximo_id_reserva(self):
         """Obtiene el próximo ID de reserva disponible."""
         consulta = "SELECT MAX(id_reserva) FROM reservas"
+        cursor = self.ejecutar_consulta(consulta)
+        max_id = cursor.fetchone()[0]
+        return (max_id + 1) if max_id else 1
+    
+    def obtener_proximo_id_factura(self):
+        """Obtiene el próximo ID de factura disponible."""
+        consulta = "SELECT MAX(id_factura) FROM facturas"
         cursor = self.ejecutar_consulta(consulta)
         max_id = cursor.fetchone()[0]
         return (max_id + 1) if max_id else 1

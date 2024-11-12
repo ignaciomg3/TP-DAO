@@ -37,7 +37,8 @@ class GestorInterfaces:
     def __init__(self, root, db_parametro, gestor_reportes):
         self.root = root  # Aquí root es una instancia de tk.Tk
         self.db = db_parametro
-        self.db.crear_tablas()  # Crear tablas en la base de datos si no existen
+        self.db.borrar_datos_de_tablas()  # Borrar los DATOS de las tablas en la base de datos
+        self.db._insertar_datos_iniciales()  # Insertar datos de prueba en la base de datos
         self.hotel_app = None  # Mantener una referencia a HotelApp
         self.gestor_reportes = gestor_reportes
 
@@ -146,6 +147,22 @@ class GestorInterfaces:
             # mostrar la reserva, la habitación 
             reserva = self.db.obtener_reserva(id_reserva)
             messagebox.showinfo("Reserva Registrada", f"Reserva ID: {reserva.id_reserva}\nCliente ID: {reserva.id_cliente}\nHabitación ID: {reserva.id_habitacion}\nFecha Inicio: {reserva.fecha_inicio}\nFecha Fin: {reserva.fecha_fin}\nCantidad de Personas: {reserva.cant_personas}")
+
+            # Generar factura de la reserva
+            habitacion = self.db.obtener_habitacion(id_habitacion)
+            precio_por_noche = habitacion.precio_por_noche
+            dias = (fecha_fin - fecha_inicio).days
+            total_reserva = precio_por_noche * dias
+            
+            proximo_id_factura = self.db.obtener_proximo_id_factura()
+
+            #LLamar a una función que se encargue de generar la factura
+            self.db.insertar_factura(proximo_id_factura, id_cliente, id_reserva, fecha_fin, total_reserva )
+            print("Factura generada con éxito")
+
+            self.db.insertar_factura_autoincremental(self, id_cliente, id_reserva, fecha_fin, total_reserva)
+            print("Factura autoincremental generada con éxito")
+            
             ventana.destroy()
         except ValueError as ve:
             messagebox.showerror("Error", str(ve))
