@@ -1,6 +1,6 @@
 from Datos.gestor_db import GestorDB
 
-def generar_reporte_ingresos():  # sourcery skip: use-named-expression
+def generar_reporte_ingresos(mes):
     gestor_db = GestorDB()
     ingresos_por_habitacion = []
 
@@ -12,11 +12,12 @@ def generar_reporte_ingresos():  # sourcery skip: use-named-expression
             FROM facturas F
             JOIN reservas R ON F.id_reserva = R.id_reserva
             JOIN habitaciones H ON R.numero_habitacion = H.numero
+            WHERE strftime('%Y-%m', R.fecha_entrada) = ?
             GROUP BY H.numero
             ORDER BY H.numero
         '''
         
-        cursor = gestor_db.ejecutar_consulta(consulta)
+        cursor = gestor_db.ejecutar_consulta(consulta, (mes,))
         if cursor:
             for fila in cursor.fetchall():
                 numero_habitacion, total_ingresos = fila
