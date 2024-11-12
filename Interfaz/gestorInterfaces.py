@@ -37,8 +37,8 @@ class GestorInterfaces:
     def __init__(self, root, db_parametro, gestor_reportes):
         self.root = root  # Aquí root es una instancia de tk.Tk
         self.db = db_parametro
-        self.db.borrar_datos_de_tablas()  # Borrar los DATOS de las tablas en la base de datos
-        self.db._insertar_datos_iniciales()  # Insertar datos de prueba en la base de datos
+        #self.db.borrar_datos_de_tablas()  # Borrar los DATOS de las tablas en la base de datos
+        #self.db._insertar_datos_iniciales()  # Insertar datos de prueba en la base de datos
         self.hotel_app = None  # Mantener una referencia a HotelApp
         self.gestor_reportes = gestor_reportes
 
