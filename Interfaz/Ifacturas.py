@@ -16,6 +16,16 @@ def ventana_mostrar_facturas(root, facturas):
     tabla.heading("fecha_emision", text="Fecha Emisión")
     tabla.heading("total", text="Total")
 
+
+    # Alternar el color de las filas
+    tabla.tag_configure('oddrow', background='white')
+    tabla.tag_configure('evenrow', background='lightgrey')
+
+    # for i, factura in enumerate(facturas):
+    #     tag = 'evenrow' if i % 2 == 0 else 'oddrow'
+    #     fecha_emision = datetime.strptime(factura[4], "%Y-%m-%d").date().strftime("%d-%m-%Y")
+    #     tabla.insert("", "end", values=(factura[0], factura[1], factura[2], factura[3], fecha_emision, factura[5]), tags=(tag,))
+
     for col in columnas:
         tabla.column(col, anchor="center")  # Centrar los datos
 
